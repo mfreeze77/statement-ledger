@@ -1,5 +1,16 @@
 title = "Statement Ledger secret scanning"
 [extend]
 useDefault = true
-# Never allowlist whole source trees or provider captures. Synthetic tests construct
-# markers in memory and scan a temporary directory; no credential is checked in.
+
+# These two values are reproducible SHA-256 identifiers for fictional assertion
+# coordinates, NOT credentials. See docs/SECRET_SCAN_REVIEW.md and the regression
+# tests. Restrict the exception to this rule, this file AND these exact JSON lines;
+# never exempt a whole file, directory, commit, hash-shaped value or provider rule.
+[[rules]]
+id = "generic-api-key"
+[[rules.allowlists]]
+description = "Two independently reproduced canonical IDs in the synthetic demo"
+condition = "AND"
+paths = ['''(?:^|/)proof/synthetic-demo\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"canonical_key"\s*:\s*"(?:bd0d3e83d9f488dec1c892c3d03c6fe320e2c9b8a79365e91feac92b56c5a38e|1a0381ecf3570558a6b5eee7a632d037cabe49ee192c106878f64f8c03895c44)"\s*,?\s*$''']

@@ -24,6 +24,19 @@ jobs:
       - run: uv sync --locked --group dev
       - run: uv run --locked python scripts/check.py check | tee /tmp/foundation-checks.txt
       - run: uv build
+      - name: Archive the tested tracked source
+        if: matrix.python == '3.13'
+        run: |
+          git archive --format=zip --output=/tmp/statement-ledger-phase0.zip HEAD
+          git rev-parse HEAD > /tmp/statement-ledger-tested-commit.txt
+      - uses: actions/upload-artifact@v4
+        if: success() && matrix.python == '3.13'
+        with:
+          name: foundation-tested-source
+          path: |
+            /tmp/statement-ledger-phase0.zip
+            /tmp/statement-ledger-tested-commit.txt
+          retention-days: 7
       - uses: actions/upload-artifact@v4
         if: always()
         with:
