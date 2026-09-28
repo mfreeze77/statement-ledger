@@ -25,3 +25,4 @@ statement_ledger = ["static/*", "sources.json"]
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = "-ra"
+markers = ["live: needs secrets, real providers, GPU or licensed media; runs only with SL_RUN_LIVE=1"]
