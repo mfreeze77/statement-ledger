@@ -35,6 +35,7 @@ def recover_jev_operation(
         if operation["provider"] != "typesafe" or operation["state"] != "completed":
             raise OperationBlocked("Reconcile a TypeSafe operation before recovering its receipt")
         receipt = ledger.store.provider_receipt(receipt_id)
+        journal.require_receipt_binding(operation_id, receipt_id)
         metadata = receipt["request_metadata"]
         expected = {
             "purpose",
@@ -62,14 +63,8 @@ def recover_jev_operation(
         ):
             raise ValueError("Recovery requires an intact, checksum-verified HTTP 200 receipt")
         captured = datetime.fromisoformat(receipt["captured_at"])
-        if (
-            captured.tzinfo is None
-            or captured > now()
-            or captured.timestamp() < operation["started_at"]
-            or operation["finished_at"] is None
-            or captured.timestamp() > operation["finished_at"]
-        ):
-            raise ValueError("Receipt is outside this operation's capture interval")
+        if captured.tzinfo is None or captured > now():
+            raise ValueError("Receipt capture time must be timezone-aware and not in the future")
         retained_ids = (operation["usage"] or {}).get("receipt_ids")
         if retained_ids and receipt_id not in retained_ids:
             raise ValueError("Receipt is not one of the operation's retained receipts")

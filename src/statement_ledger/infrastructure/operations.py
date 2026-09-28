@@ -67,10 +67,12 @@ class OperationJournal:
                 (operation_id, request_hash, provider, estimate_micro_usd, time.time()),
             )
             if authorization is not None:
-                self.store.db.execute(
+                consumed = self.store.db.execute(
                     "UPDATE provider_retry_authorizations SET state='consumed',consumed_by=?,finished_at=? WHERE id=? AND state='issued'",
                     (operation_id, time.time(), authorization["id"]),
                 )
+                if consumed.rowcount != 1:
+                    raise OperationBlocked("Retry authorization was not consumed exactly once")
                 self.store.audit(
                     {
                         "type": "provider.retry_authorization_consumed",
@@ -89,6 +91,58 @@ class OperationJournal:
                     "estimated_micro_usd": estimate_micro_usd,
                 }
             )
+
+    def capture_receipt(
+        self,
+        operation_id: str,
+        request_hash: str,
+        attempt: int,
+        status: int | None,
+        body: bytes,
+        truncated: bool,
+        request_metadata: dict[str, Any],
+    ) -> str:
+        """Capture bytes and their explicit originating operation in one transaction.
+
+        Ownership is an append-only audit fact, separate from the hashed request
+        metadata. A late response stays with its original attempt even after owner
+        reconciliation; never look up the newest attempt for the same request.
+        """
+        with self.store.transaction():
+            operation = self.get(operation_id)
+            if operation["request_hash"] != request_hash or operation["state"] == "cancelled":
+                raise OperationBlocked("Receipt does not belong to an eligible provider operation")
+            receipt_id = str(
+                self.store.capture_provider_response(
+                    request_hash, attempt, status, body, truncated, request_metadata
+                )
+            )
+            self.store.audit(
+                {
+                    "type": "provider.receipt_bound",
+                    "receipt_id": receipt_id,
+                    "operation_id": operation_id,
+                    "request_hash": request_hash,
+                }
+            )
+            return receipt_id
+
+    def require_receipt_binding(self, operation_id: str, receipt_id: str) -> None:
+        """Refuse unbound, multiply-bound or cross-operation recovery without mutation."""
+        rows = self.store.db.execute(
+            "SELECT event FROM audit WHERE json_extract(event,'$.type')='provider.receipt_bound' "
+            "AND json_extract(event,'$.receipt_id')=?",
+            (receipt_id,),
+        ).fetchall()
+        if len(rows) != 1:
+            raise ValueError("Receipt needs exactly one recorded provider operation binding")
+        binding = json.loads(rows[0]["event"])
+        operation = self.get(operation_id)
+        if (
+            binding.get("operation_id") != operation_id
+            or binding.get("request_hash") != operation["request_hash"]
+        ):
+            raise ValueError("Receipt is bound to a different provider operation")
 
     def get(self, operation_id: str) -> dict[str, Any]:
         row = self.store.db.execute(
@@ -313,11 +367,11 @@ class OperationJournal:
             raise ValueError("Reconciliation requires documented nonnegative actual cost")
         with self.store.transaction():
             cursor = self.store.db.execute(
-                "UPDATE provider_operations SET state='completed',cost_status='actual',actual_micro_usd=?,finished_at=? WHERE id=? AND state IN ('unknown','started','completed')",
+                "UPDATE provider_operations SET state='completed',cost_status='actual',actual_micro_usd=?,finished_at=? WHERE id=? AND state IN ('unknown','started')",
                 (actual_micro_usd, time.time(), operation_id),
             )
             if cursor.rowcount != 1:
-                raise KeyError(operation_id)
+                raise OperationBlocked("Operation is not awaiting reconciliation")
             self.store.audit(
                 {
                     "type": "provider.operation_reconciled",
