@@ -1165,5 +1165,15 @@
       "SL-207"
     ],
     "path": "tickets/SL-220-purge-revoked-source-derived-profiles-and-provider-artifacts.md"
+  },
+  {
+    "id": "SL-301",
+    "title": "Bind recovered receipts to their own provider operation",
+    "status": "ready_for_codex",
+    "gate": "G2",
+    "dependencies": [
+      "SL-207"
+    ],
+    "path": "tickets/SL-301-bind-recovered-receipts-to-their-own-operation.md"
   }
 ]

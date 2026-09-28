@@ -102,5 +102,6 @@
 | [SL-218](SL-218-complete-real-browser-validation-and-collaborative-review-ux.md) | Complete real browser validation and collaborative review UX | proposed | G3 | SL-205, SL-202 |
 | [SL-219](SL-219-measure-and-route-by-all-in-processing-cost.md) | Measure and route by all-in processing cost | proposed | G3 | SL-209, SL-211, SL-213 |
 | [SL-220](SL-220-purge-revoked-source-derived-profiles-and-provider-artifacts.md) | Purge revoked source-derived profiles and provider artifacts | proposed | G2 | SL-006, SL-207 |
+| [SL-301](SL-301-bind-recovered-receipts-to-their-own-operation.md) | Bind recovered receipts to their own provider operation | ready_for_codex | G2 | SL-207 |
 
 Machine index: [tickets.json](tickets.json). No remote issues were created. Local-reference, mocked-contract and synthetic-media statuses have different evidence meanings; none implies a completed real-source service.
