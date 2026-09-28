@@ -4,7 +4,8 @@ Treat this repository as a completely independent application. Do not read from,
 write to, import from, migrate from, or make runtime assumptions about another
 private application unless the owner explicitly authorizes a future integration.
 
-Read docs/runbooks/FOUNDATION.md, docs/IMPLEMENTATION_STATUS.md, the owning module README, and the chosen task first. Load only relevant product-spec sections; do not expand the source/spec backlog as foundation work.
+Read SPECIFICATION.md, docs/IMPLEMENTATION_STATUS.md, and the chosen ticket first.
+Also read docs/runbooks/FOUNDATION.md and the owning module README; do not expand the source/spec backlog as foundation work.
 Actual code and test evidence define implementation status. Never mark a vendor
 connected because its name appears in the source registry. Never claim a model
 worked merely because a fixture or mocked HTTP response passed.

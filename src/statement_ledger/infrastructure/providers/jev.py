@@ -10,10 +10,11 @@ import json
 import math
 import time
 import uuid
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import datetime
 from email.utils import parsedate_to_datetime
+from typing import Any
 
 import httpx
 
@@ -46,6 +47,35 @@ class JevConfig:
             raise ValueError("Invalid size/retry limits")
         if not 0 <= self.cache_seconds <= 604800:
             raise ValueError("Invalid cache TTL")
+
+
+def cache_eligible(
+    payload: Mapping[str, Any], config: JevConfig, *, at: datetime | None = None
+) -> bool:
+    """Shared policy for canonical and recovered results. Never refresh capture time on reuse."""
+    if (
+        config.model in {"jev-latest", "jev-preview"}
+        or payload.get("model_requested") != config.model
+        or payload.get("status") != "available"
+    ):
+        return False
+    try:
+        captured = datetime.fromisoformat(payload["captured_at"])
+        age = ((at or now()) - captured).total_seconds()
+    except (KeyError, TypeError, ValueError, OverflowError):
+        return False
+    return 0 <= age < config.cache_seconds
+
+
+def find_cached_decision(
+    ledger: Any, request_hash: str, config: JevConfig
+) -> dict[str, Any] | None:
+    for row in ledger.store.find_decisions(request_hash):
+        if cache_eligible(row["payload"], config) and ledger.dependencies_current(
+            "decision_run", row["id"]
+        ):
+            return row
+    return None
 
 
 class ResponseContractError(ValueError):
@@ -315,15 +345,27 @@ def run_decision(ledger, request, client, *, actor="local-operator"):
             "validator": VALIDATOR_VERSION,
         }
     )
-    if client.config.model not in {"jev-latest", "jev-preview"}:
-        for row in ledger.store.find_decisions(key):
-            p = row["payload"]
-            if p["status"] == "available" and ledger.dependencies_current(
-                "decision_run", row["id"]
-            ):
-                age = (now() - datetime.fromisoformat(p["captured_at"])).total_seconds()
-                if 0 <= age < client.config.cache_seconds:
-                    return {"record": row, "cache_hit": True}
+    accounting = getattr(client, "operation_policy", None)
+    journal = None
+    if accounting is not None:
+        if client.config.max_attempts != 1:
+            raise ValueError("Accounted calls require one transport attempt per reservation")
+        from statement_ledger.infrastructure.operations import OperationJournal
+
+        journal = OperationJournal(ledger.store)
+    retry_authorized = journal is not None and journal.retry_authorized(key, "typesafe")
+    if not retry_authorized:
+        cached = find_cached_decision(ledger, key, client.config)
+        if cached is not None:
+            return {"record": cached, "cache_hit": True}
+        if journal is not None:
+            recovered = journal.recover_decision(key, "typesafe")
+            if recovered is not None and cache_eligible(recovered, client.config):
+                authorize_bindings(ledger, recovered["bindings"])
+                return {
+                    "record": ledger.put("decision_run", recovered, actor=actor),
+                    "cache_hit": True,
+                }
 
     def capture(attempt, status, body, truncated):
         return ledger.store.capture_provider_response(
@@ -340,12 +382,8 @@ def run_decision(ledger, request, client, *, actor="local-operator"):
             },
         )
 
-    accounting = getattr(client, "operation_policy", None)
-    operation = "decision-" + key
-    if accounting is not None:
-        from statement_ledger.infrastructure.operations import OperationJournal
-
-        journal = OperationJournal(ledger.store)
+    operation = "jev-" + uuid.uuid4().hex
+    if journal is not None:
         journal.begin(
             operation,
             key,
@@ -355,7 +393,7 @@ def run_decision(ledger, request, client, *, actor="local-operator"):
         )
     try:
         result = client.evaluate(request["state"], request["questions"], capture=capture)
-        if accounting is not None:
+        if journal is not None:
             if result["status"] == "available":
                 journal.complete(
                     operation, {"usage": result["usage"], "receipt_ids": result["receipt_ids"]}
@@ -363,7 +401,7 @@ def run_decision(ledger, request, client, *, actor="local-operator"):
             else:
                 journal.unknown(operation)
     except BaseException:
-        if accounting is not None:
+        if journal is not None:
             journal.unknown(operation)
         raise
     record = {

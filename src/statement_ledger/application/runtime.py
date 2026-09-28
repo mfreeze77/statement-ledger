@@ -43,6 +43,9 @@ COMMANDS = frozenset(
         "restore-workspace",
         "operations",
         "reconcile-operation",
+        "authorize-operation-retry",
+        "recover-operation-decision",
+        "revoke-operation-retry",
     }
 )
 
@@ -77,6 +80,16 @@ def add_commands(subparsers: Any) -> None:
     parser.add_argument("operation_id")
     parser.add_argument("--actual-micro-usd", type=int, required=True)
     parser.add_argument("--evidence", required=True)
+    parser = subparsers.add_parser("authorize-operation-retry")
+    parser.add_argument("operation_id")
+    parser.add_argument("--reason", required=True)
+    parser = subparsers.add_parser("recover-operation-decision")
+    parser.add_argument("operation_id")
+    parser.add_argument("--receipt-id", required=True)
+    parser.add_argument("--reason", required=True)
+    parser = subparsers.add_parser("revoke-operation-retry")
+    parser.add_argument("authorization_id")
+    parser.add_argument("--reason", required=True)
 
 
 def doctor(settings: Settings, *, gpu: bool = False) -> dict[str, Any]:
@@ -201,12 +214,30 @@ def execute(args: argparse.Namespace, settings: Settings) -> dict[str, Any]:
                 args.job_id, reason=args.reason, additional_attempts=args.additional_attempts
             )
         if args.command == "operations":
-            return {"operations": OperationJournal(store).list()}
+            return {
+                "operations": OperationJournal(store).list(),
+                "retry_authorizations": OperationJournal(store).authorizations(),
+            }
         if args.command == "reconcile-operation":
             OperationJournal(store).reconcile(
                 args.operation_id, actual_micro_usd=args.actual_micro_usd, evidence=args.evidence
             )
             return {"reconciled": args.operation_id, "automatic_retry": False}
+        if args.command == "authorize-operation-retry":
+            return OperationJournal(store).authorize_retry(
+                args.operation_id, actor="local-owner", reason=args.reason
+            )
+        if args.command == "recover-operation-decision":
+            from statement_ledger.application.operation_recovery import recover_jev_operation
+
+            return recover_jev_operation(
+                ledger, args.operation_id, args.receipt_id, actor="local-owner", reason=args.reason
+            )
+        if args.command == "revoke-operation-retry":
+            OperationJournal(store).revoke_retry(
+                args.authorization_id, actor="local-owner", reason=args.reason
+            )
+            return {"revoked": args.authorization_id, "automatic_retry": False}
         if args.command == "worker":
             configure_logging(settings.log_level)
             worker = Worker(ledger, settings, handlers())

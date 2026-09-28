@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import uuid
 from typing import Any, cast
 
 from statement_ledger.contracts.models import RightsGrant, now
@@ -164,6 +165,8 @@ def prepare_jev(context: WorkContext, job: JobRequest) -> PreparedResult:
         VALIDATOR_VERSION,
         JevClient,
         JevConfig,
+        cache_eligible,
+        find_cached_decision,
     )
 
     if not context.settings.jev_enabled:
@@ -172,24 +175,25 @@ def prepare_jev(context: WorkContext, job: JobRequest) -> PreparedResult:
     request = params.request
     model = context.settings.jev_model
     key = digest({**request, "endpoint": ENDPOINT, "model": model, "validator": VALIDATOR_VERSION})
-    operation_id = "decision-" + key
+    config = JevConfig(model=model, max_attempts=1)
+    operation_id = "jev-" + uuid.uuid4().hex
     context.check_cancelled()
-    # Reuse only current, source-bound decisions. Scores still confer no review authority.
-    for row in context.ledger.store.find_decisions(key):
-        if row["payload"]["status"] == "available" and context.ledger.dependencies_current(
-            "decision_run", row["id"]
-        ):
-            return PreparedResult(
-                records=[RecordWrite("decision_run", row["payload"], row["revision"])],
-                summary={"operation_id": operation_id, "cache_hit": True, "cost_status": "reused"},
-            )
     journal = context.operations
-    recovered = journal.recover_decision(key, "typesafe")
-    if recovered is not None:
-        return PreparedResult(
-            records=[RecordWrite("decision_run", recovered)],
-            summary={"operation_id": operation_id, "cache_hit": True, "cost_status": "reused"},
-        )
+    # Owner-authorized refresh bypasses old results; the journal consumes permission atomically.
+    if not journal.retry_authorized(key, "typesafe"):
+        cached = find_cached_decision(context.ledger, key, config)
+        if cached is not None:
+            return PreparedResult(
+                records=[RecordWrite("decision_run", cached["payload"], cached["revision"])],
+                summary={"cache_hit": True, "cost_status": "reused"},
+            )
+        recovered = journal.recover_decision(key, "typesafe")
+        if recovered is not None and cache_eligible(recovered, config):
+            return PreparedResult(
+                records=[RecordWrite("decision_run", recovered)],
+                summary={"cache_hit": True, "cost_status": "reused"},
+            )
+    # An alias/expired/unrecoverable prior result is not permission to spend again.
     credential = LocalSecrets().value("TYPESAFE_API_KEY")
     context.check_cancelled()
     journal.begin(
@@ -212,7 +216,7 @@ def prepare_jev(context: WorkContext, job: JobRequest) -> PreparedResult:
                 {**request, "endpoint": ENDPOINT, "model": model, "validator": VALIDATOR_VERSION},
             )
 
-        with JevClient(credential, config=JevConfig(model=model, max_attempts=1)) as client:
+        with JevClient(credential, config=config) as client:
             # Last check before any potentially paid external effect.
             context.check_cancelled()
             submitted = True
@@ -223,7 +227,7 @@ def prepare_jev(context: WorkContext, job: JobRequest) -> PreparedResult:
                 "Remote outcome is unavailable; inspect receipts before recovery"
             )
         payload = {
-            "id": operation_id,
+            "id": "decision-" + uuid.uuid4().hex,
             "purpose": request["purpose"],
             "request_hash": key,
             "model_requested": model,

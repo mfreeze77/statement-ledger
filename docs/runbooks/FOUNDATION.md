@@ -84,3 +84,25 @@ See [review remediation](../PR1_REVIEW_FIXES.md) for the twelve regressions and 
 `SL_RUN_LIVE` is a recognized test-runner control, not a provider-spending switch. The main
 branch's exact-marker live gate is retained: tests needing providers, secrets or actual GPU
 execution are skipped in ordinary checks. Never set it in cloud-agent CI to avoid the gate.
+
+## PR #1 follow-up: explicit operation recovery
+
+See [the follow-up operating procedure and test map](../PR1_FOLLOWUP_FIXES.md).
+Migration 004 adds single-use retry permissions; run the explicit migrator before opening
+an older workspace. Applied SQL and historical record hashes remain unchanged.
+
+After draining workers and reconciling ambiguous billing, the owner chooses either:
+
+```bash
+statement-ledger recover-operation-decision OPERATION_ID --receipt-id RECEIPT_ID --reason "Reviewed retained receipt"
+# OR: permission for one new reservation; this does not make a call or enqueue work.
+statement-ledger authorize-operation-retry OPERATION_ID --reason "Authorize one replacement attempt"
+statement-ledger requeue-job JOB_ID --reason "Owner authorized recovery"
+```
+
+To withdraw an unused permission:
+`statement-ledger revoke-operation-retry AUTHORIZATION_ID --reason "Permission withdrawn"`.
+These are local-owner CLI actions, not unauthenticated HTTP endpoints. Each action records
+actor and reason. Cost reconciliation alone never permits another charge; unknown outcomes
+remain blocked. Recovery keeps the receipt's original capture time; unknown old latency
+is null, not invented. Direct and worker cache reuse share model-alias and age checks.

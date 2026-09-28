@@ -10,7 +10,7 @@ from datetime import UTC, datetime
 from importlib.resources import files
 from pathlib import Path
 
-LATEST_VERSION = 3
+LATEST_VERSION = 4
 CORE_COLUMNS = {
     "revisions": {
         "kind",
@@ -144,6 +144,7 @@ def check_schema(connection: sqlite3.Connection) -> None:
         "artifact_refs",
         "job_artifacts",
         "provider_operations",
+        "provider_retry_authorizations",
         "claim_search",
         "provider_receipts",
         "schema_migrations",

@@ -5,10 +5,11 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import threading
 import time
-from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from pathlib import Path
+from types import SimpleNamespace
 
 import httpx
 import pytest
@@ -176,22 +177,38 @@ def test_heartbeat_covers_slow_artifact_hash_before_gpu_prepare(ledger, tmp_path
     )
     worker.queue.submit(job)
     original_verify = worker.artifacts.verify
+    from statement_ledger.infrastructure import queue as queue_module
+
+    # Only the queue clock is virtual. Thread scheduling may be arbitrarily slow;
+    # ordering comes from events, not a 300ms race against real elapsed time.
+    clock = [time.time()]
+    initial_time = clock[0]
+    monkeypatch.setattr(queue_module, "time", SimpleNamespace(time=lambda: clock[0]))
+    hashing = threading.Event()
+    renewed = threading.Event()
+    original_heartbeat = RuntimeQueue.heartbeat
+
+    def observed_heartbeat(self, job_id, token, **kwargs):
+        assert hashing.wait(timeout=10), "Worker did not start hashing"
+        if not renewed.is_set():
+            clock[0] = initial_time + 2
+        original_heartbeat(self, job_id, token, **kwargs)
+        renewed.set()
+
+    monkeypatch.setattr(RuntimeQueue, "heartbeat", observed_heartbeat)
     competitors = []
-    with ThreadPoolExecutor(max_workers=1) as pool:
 
-        def compete():
-            time.sleep(3.1)
-            with _store(ledger.store.path) as store:
-                return RuntimeQueue(store).claim("gpu", lease_seconds=3)
+    def slow_verify(value):
+        hashing.set()
+        assert renewed.wait(timeout=10), "Heartbeat must run during input verification"
+        clock[0] = initial_time + 3.1  # Initial lease expired; renewed lease remains live.
+        with _store(ledger.store.path) as competing_store:
+            competitors.append(RuntimeQueue(competing_store).claim("gpu", lease_seconds=3))
+        original_verify(value)
 
-        def slow_verify(value):
-            competitors.append(pool.submit(compete))
-            time.sleep(3.4)
-            original_verify(value)
-
-        monkeypatch.setattr(worker.artifacts, "verify", slow_verify)
-        assert worker.run_once()["state"] == "succeeded"
-        assert competitors[0].result(timeout=5) is None
+    monkeypatch.setattr(worker.artifacts, "verify", slow_verify)
+    assert worker.run_once()["state"] == "succeeded"
+    assert competitors == [None]
     assert prepared == [1]
 
 

@@ -29,7 +29,7 @@ def test_real_v02_wal_fts_jobs_and_exact_historical_rows_survive(tmp_path, state
     before = frozen_rows(legacy.db)
     assert legacy.get("proposition", "fixture-claim")["stale"]
     legacy.close()
-    assert migrate(path)["applied"] == [1, 2, 3]
+    assert migrate(path)["applied"] == [1, 2, 3, 4]
     current = Store(path)
     try:
         assert frozen_rows(current.db) == before

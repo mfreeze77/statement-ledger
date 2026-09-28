@@ -176,7 +176,7 @@ def test_migration_rollback_and_retry(tmp_path):
         assert not database.execute(
             "SELECT name FROM sqlite_master WHERE name='revisions'"
         ).fetchone()
-    assert migrate(path)["applied"] == [1, 2, 3]
+    assert migrate(path)["applied"] == [1, 2, 3, 4]
     assert migrate(path)["applied"] == []
 
 
@@ -184,7 +184,7 @@ def test_concurrent_migrations(tmp_path):
     path = tmp_path / "race.sqlite3"
     with ThreadPoolExecutor(max_workers=2) as executor:
         results = list(executor.map(lambda _: migrate(path), range(2)))
-    assert sorted(len(result["applied"]) for result in results) == [0, 3]
+    assert sorted(len(result["applied"]) for result in results) == [0, 4]
 
 
 def test_unknown_migration_checksum_fails_closed(tmp_path):
@@ -219,6 +219,7 @@ def test_existing_records_and_audit_survive_adoption(seeded):
         "artifact_refs",
         "work_attempts",
         "work_jobs",
+        "provider_retry_authorizations",
         "provider_operations",
     ):
         seeded.store.db.execute("DROP TABLE " + table)

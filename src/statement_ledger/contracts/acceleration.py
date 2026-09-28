@@ -137,7 +137,7 @@ class DecisionRun(Record):
     error_code: str | None = None
     warnings: list[str] = Field(default_factory=list)
     receipt_ids: list[ID] = Field(default_factory=list)
-    latency_ms: Annotated[float, Field(ge=0, allow_inf_nan=False)]
+    latency_ms: Annotated[float, Field(ge=0, allow_inf_nan=False)] | None = None
     usage: dict[str, int] = Field(default_factory=dict)
     captured_at: datetime
 
