@@ -31,7 +31,7 @@ ENV_FIELDS: dict[str, str] = {
     "SL_SPEECH_MODEL_NAME": "speech_model_name",
     "SL_SPEECH_COMPUTE_TYPE": "speech_compute_type",
 }
-CONTROL_ENV = {"SL_CONFIG_FILE", "SL_ENV_FILE", "SL_SECRET_DIR"}
+CONTROL_ENV = {"SL_CONFIG_FILE", "SL_ENV_FILE", "SL_SECRET_DIR", "SL_RUN_LIVE"}
 SECRET_ALIASES: dict[str, tuple[str, ...]] = {
     "API_TOKEN": ("SL_API_TOKEN",),
     "TYPESAFE_API_KEY": ("TYPESAFE_API_KEY",),

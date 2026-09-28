@@ -28,6 +28,7 @@ statement_ledger = ["static/*", "sources.json", "infrastructure/migrations/*.sql
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = "-ra"
+markers = ["live: needs secrets, real providers, GPU or licensed media; runs only with SL_RUN_LIVE=1"]
 
 [tool.ruff]
 required-version = "==0.14.10"

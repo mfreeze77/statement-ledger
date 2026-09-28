@@ -38,6 +38,8 @@ def render() -> str:
         "# SL_CONFIG_FILE=config/local.toml",
         "# SL_ENV_FILE=.env",
         "# SL_SECRET_DIR=/run/secrets",
+        "# Live-test opt-in: local agent only; leave unset in CI.",
+        "SL_RUN_LIVE=",
         "",
         "# Empty credentials are valid while their operation is disabled.",
     ]

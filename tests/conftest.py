@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from statement_ledger.demo import seed
@@ -18,3 +20,14 @@ def ledger(tmp_path):
 def seeded(ledger):
     seed(ledger)
     return ledger
+
+
+def pytest_collection_modifyitems(config, items):
+    # Live tests need local secrets or hardware; CI and the cloud agent never run them.
+    if os.getenv("SL_RUN_LIVE") == "1":
+        return
+    skip = pytest.mark.skip(reason="live test; set SL_RUN_LIVE=1 locally")
+    for item in items:
+        # Match the marker itself; item.keywords also holds parametrize ids and node names.
+        if item.get_closest_marker("live"):
+            item.add_marker(skip)
