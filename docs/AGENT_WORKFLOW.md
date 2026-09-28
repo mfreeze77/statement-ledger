@@ -99,6 +99,14 @@ Merge only when all of these hold:
    deleted or loosened tests, removed validations or broadened access need an explicit
    reason in the ticket.
 5. Status documents claim only what was actually executed.
+6. Evidence comes from the CI logs, not badges: the completion marker, the real Python
+   version for each matrix job, and test counts compared with `main`.
+7. Test and assertion counts did not drop, or every drop is explained in the ticket.
+8. Every change to workflows, CI gates, secret handling, the secret-scan allowlist,
+   migrations or rights checks was read line by line; workflow and allowlist changes
+   have the owner's explicit approval.
+9. High-risk areas touched by the PR (migrations, worker result commits, secrets and
+   auth) got a code review beyond CI, whatever the CI result.
 
 Merges use squash. Nobody pushes directly to `main` except Claude committing tickets and
 workflow documents.

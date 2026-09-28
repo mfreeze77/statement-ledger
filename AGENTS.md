@@ -55,3 +55,12 @@ You implement tickets. The full loop is in [docs/AGENT_WORKFLOW.md](docs/AGENT_W
   live-verified, or upgrade an implementation status without executed evidence.
 - Review comments on your PR are your next instructions; push fixes to the same branch.
 - Do not edit AGENTS.md, CLAUDE.md or docs/AGENT_WORKFLOW.md unless the ticket says so.
+- Deliver code only as plain, reviewable commits. Never commit encoded, compressed or
+  split payloads that are unpacked later, and never add a workflow that writes to the
+  repository. If you are blocked from pushing, say so in the PR instead of working around it.
+- Changes under `.github/workflows/`, to CI gates, the secret-scan configuration or any
+  allowlist must be called out in the PR description; they need the owner's explicit
+  approval before merge.
+- A passing check counts only if its log proves it: every check step must fail the job
+  on failure (no unguarded pipes, `|| true` or `continue-on-error`), and CI prints a
+  completion marker plus the real interpreter version and test counts.
