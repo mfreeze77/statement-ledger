@@ -13,7 +13,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - run: python -m pip download --only-binary=:all: --dest /tmp/sl-editor-tools ruff==0.14.10 mypy==1.19.1
+      - run: |
+          python -m pip download --only-binary=:all: --dest /tmp/sl-editor-tools ruff==0.14.10 mypy==1.19.1
       - uses: actions/upload-artifact@v4
         with:
           name: sl-editor-tools
