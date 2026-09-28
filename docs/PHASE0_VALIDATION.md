@@ -41,7 +41,10 @@ from the matrix, disables interpreter downloads, and asserts the running major/m
 version. Historical job names alone are not evidence of multi-version coverage.
 
 The resumption fetched the exact source archive from GitHub Actions. **298 tests
-passed locally** after correction. Ruff 0.14.10 and mypy 1.19.1 were downloaded as
+passed locally and on each actual Python 3.11/3.12/3.13 CI interpreter** after correction
+(run 36376840640, head `4f432402`). Its container and secret-scan jobs also passed.
+A final metadata-only correction preserved the historical v0.2 manifest and added
+one consistency test, bringing the final local suite to **299 tests**. Ruff 0.14.10 and mypy 1.19.1 were downloaded as
 pinned wheels by a temporary read-only GitHub job (36376561821), then installed
 locally without network access. Ruff formatting/lint and strict checks on all 14
 foundation files passed. The queued import/localization/FFmpeg proof, immediate
@@ -59,3 +62,10 @@ weights, live provider credentials, authorized real-person audio, and browser na
 No live calls, real-person statements, fabricated findings or claimed production speedups
 were used to substitute for those missing prerequisites. Hardware/runtime-specific
 acceptance remains explicit in the operating guide.
+
+## Release metadata
+
+`RELEASE.json` describes the current PR candidate and links to validation records; it
+does not copy stale test counts or coverage percentages from v0.2. Its source/schema/
+ticket counts are regression-tested against the tree. `docs/releases/v0.2.0.json`
+preserves the original historical manifest without presenting it as current status.
