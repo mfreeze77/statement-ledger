@@ -39,6 +39,7 @@ def main() -> int:
         run(python, "-m", "pytest", "-q")
     if args.action in {"check", "proof"}:
         run(python, "scripts/foundation-proof.py")
+    print(f"FOUNDATION_{args.action.upper()}_COMPLETE", flush=True)
     return 0
 
 

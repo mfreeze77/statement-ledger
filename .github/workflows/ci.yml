@@ -2,6 +2,10 @@ name: standalone-core
 on: [push, pull_request]
 permissions:
   contents: read
+# Explicit bash enables pipefail; the implicit Linux shell does not.
+defaults:
+  run:
+    shell: bash
 concurrency:
   group: foundation-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -22,7 +26,7 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - run: python -m pip install uv==0.9.21
       - run: uv sync --locked --group dev
-      - run: uv run --locked python scripts/check.py check | tee /tmp/foundation-checks.txt
+      - run: uv run --locked python scripts/check.py check 2>&1 | tee /tmp/foundation-checks.txt
       - run: uv build
       - name: Archive the tested tracked source
         if: matrix.python == '3.13'
@@ -54,7 +58,7 @@ jobs:
       - run: python scripts/dev.py up
       - run: python scripts/dev.py doctor
       - run: python scripts/container-smoke.py
-      - run: python scripts/dev.py proof | tee /tmp/container-proof.txt
+      - run: python scripts/dev.py proof 2>&1 | tee /tmp/container-proof.txt
       - if: always()
         run: python scripts/dev.py down
       - uses: actions/upload-artifact@v4

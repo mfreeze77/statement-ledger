@@ -62,8 +62,7 @@ def test_synthetic_marker_exceeds_detector_entropy_floor():
     marker = PROOF["synthetic_marker"]()
     assert len(marker) == 40
     entropy = -sum(
-        (count / len(marker)) * math.log2(count / len(marker))
-        for count in Counter(marker).values()
+        (count / len(marker)) * math.log2(count / len(marker)) for count in Counter(marker).values()
     )
     assert entropy > 3.0
     assert marker not in (ROOT / "scripts/secret-scan-proof.py").read_text()
@@ -89,9 +88,7 @@ def test_scan_validator_fails_closed(tmp_path, exit_code, report, stdout, expect
         path.write_text(report if isinstance(report, str) else json.dumps(report))
     result = subprocess.CompletedProcess([], exit_code, stdout=stdout, stderr="")
     with pytest.raises(RuntimeError) as caught:
-        PROOF["validate_scan"](
-            result, path, case="test", expected_rule=expected_rule, marker="LEAK"
-        )
+        PROOF["validate_scan"](result, path, case="test", expected_rule=expected_rule, marker="LEAK")
     assert "LEAK" not in str(caught.value)
 
 
@@ -100,9 +97,5 @@ def test_scan_validator_accepts_only_expected_outcome(tmp_path, expected_rule):
     findings = [] if expected_rule is None else [{"RuleID": expected_rule, "Secret": "REDACTED"}]
     path = tmp_path / "report.json"
     path.write_text(json.dumps(findings))
-    result = subprocess.CompletedProcess(
-        [], 0 if expected_rule is None else 1, stdout="", stderr=""
-    )
-    PROOF["validate_scan"](
-        result, path, case="test", expected_rule=expected_rule, marker="LEAK"
-    )
+    result = subprocess.CompletedProcess([], 0 if expected_rule is None else 1, stdout="", stderr="")
+    PROOF["validate_scan"](result, path, case="test", expected_rule=expected_rule, marker="LEAK")
