@@ -1,11 +1,6 @@
-from importlib.resources import files
-import json
+"""Compatibility import; implementation is owned by contracts.source_catalog."""
 
-def sources() -> list[dict]:
-    return json.loads(files("statement_ledger").joinpath("sources.json").read_text(encoding="utf-8"))
+import sys
+from importlib import import_module
 
-def source(source_id: str) -> dict:
-    for item in sources():
-        if item["id"] == source_id:
-            return item
-    raise ValueError(f"Unknown source: {source_id}")
+sys.modules[__name__] = import_module("statement_ledger.contracts.source_catalog")

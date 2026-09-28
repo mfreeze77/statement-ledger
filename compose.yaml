@@ -1,21 +1,77 @@
 name: statement-ledger
+x-dev: &dev
+  build:
+    context: .
+    target: dev
+  working_dir: /workspace
+  env_file:
+    - path: .env
+      required: false
+  environment: &environment
+    SL_DATA_ROOT: /data
+    SL_DB_PATH: ${SL_DB_PATH:-/data/db/ledger.sqlite3}
+    SL_HOST: 0.0.0.0
+  volumes:
+    - .:/workspace
+    - statement-ledger-data:/data
+  security_opt: [no-new-privileges:true]
+  cap_drop: [ALL]
 services:
-  ledger:
-    build: .
+  dev:
+    <<: *dev
+    profiles: [dev]
+  migrate:
+    <<: *dev
+    command: [statement-ledger, migrate]
+    restart: "no"
+  api:
+    <<: *dev
+    command: [statement-ledger, serve]
+    ports: ["127.0.0.1:8765:8765"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/readyz', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+  worker:
+    <<: *dev
+    command: [statement-ledger, worker]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    stop_grace_period: 90s
+    restart: unless-stopped
+  gpu-worker:
+    <<: *dev
+    profiles: [gpu]
+    build:
+      context: .
+      dockerfile: environments/gpu/Dockerfile
     environment:
-      SL_API_TOKEN: ${SL_API_TOKEN:?Generate SL_API_TOKEN before starting}
-      SL_DB_PATH: /data/ledger.sqlite3
-    ports:
-      - "127.0.0.1:8765:8765"
+      <<: *environment
+      SL_WORKER_CAPABILITY: gpu
+      HF_HUB_OFFLINE: '1'
+      TRANSFORMERS_OFFLINE: '1'
     volumes:
+      - .:/workspace:ro
       - statement-ledger-data:/data
-    read_only: true
-    tmpfs:
-      - /tmp:rw,noexec,nosuid,size=64m
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
+      - ./local-models:/data/models:ro
+    command: [statement-ledger, worker]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    stop_grace_period: 90s
     restart: unless-stopped
 volumes:
   statement-ledger-data:

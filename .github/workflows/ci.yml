@@ -2,20 +2,116 @@ name: standalone-core
 on: [push, pull_request]
 permissions:
   contents: read
+# Explicit bash enables pipefail; the implicit Linux shell does not.
+defaults:
+  run:
+    shell: bash
+concurrency:
+  group: foundation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      UV_PYTHON: ${{ matrix.python }}
+      UV_PYTHON_DOWNLOADS: never
     strategy:
+      fail-fast: false
       matrix:
         python: ['3.11', '3.12', '3.13']
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg
-      - run: python -m pip install -e '.[test]'
-      - run: python -m pytest -q
-      - run: python scripts/check-standalone.py
-      - run: python scripts/export-contracts.py && git diff --exit-code contracts
-      - run: python scripts/compile-spec.py && git diff --exit-code SPECIFICATION.md
+      - run: python -m pip install uv==0.9.21
+      - run: uv sync --locked --group dev
+      - name: Verify the matrix interpreter actually selected by uv
+        run: |
+          uv run --locked python - <<'PYTHON'
+          import os
+          import sys
+          actual = '.'.join(map(str, sys.version_info[:2]))
+          expected = os.environ['UV_PYTHON']
+          assert actual == expected, (actual, expected)
+          print(f'MATRIX_INTERPRETER_VERIFIED: {actual}; {sys.executable}')
+          PYTHON
+      - run: uv run --locked python scripts/check.py check 2>&1 | tee /tmp/foundation-checks.txt
+      - run: grep -Fx FOUNDATION_CHECK_COMPLETE /tmp/foundation-checks.txt
+      - run: uv build
+      - name: Archive the tested tracked source
+        if: matrix.python == '3.13'
+        run: |
+          git archive --format=zip --output=/tmp/statement-ledger-phase0.zip HEAD
+          git rev-parse HEAD > /tmp/statement-ledger-tested-commit.txt
+      - uses: actions/upload-artifact@v4
+        if: success() && matrix.python == '3.13'
+        with:
+          name: foundation-tested-source
+          path: |
+            /tmp/statement-ledger-phase0.zip
+            /tmp/statement-ledger-tested-commit.txt
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: foundation-checks-${{ matrix.python }}
+          path: /tmp/foundation-checks.txt
+          retention-days: 7
+  container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: python scripts/dev.py test
+      - run: python scripts/dev.py up
+      - run: python scripts/dev.py doctor
+      - run: python scripts/container-smoke.py
+      - run: python scripts/dev.py proof 2>&1 | tee /tmp/container-proof.txt
+      - run: grep -Fx FOUNDATION_PROOF_COMPLETE /tmp/container-proof.txt
+      - if: always()
+        run: python scripts/dev.py down
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: foundation-container-proof
+          path: /tmp/container-proof.txt
+          retention-days: 7
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Scan history with pinned Gitleaks
+        run: |
+          mkdir -p /tmp/sl-secret-report
+          set +e
+          docker run --rm -v "$PWD:/repo:ro" -v /tmp/sl-secret-report:/report zricethezav/gitleaks:v8.24.2@sha256:b5918eb91b8d2473cec722f066abb4352e4ffdc4ec9f4283ec143aba9ec9ebc4 git /repo --redact --config /repo/.gitleaks.toml --report-format json --report-path /report/gitleaks.json
+          status=$?
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('/tmp/sl-secret-report/gitleaks.json')
+          if path.exists():
+              for finding in json.loads(path.read_text()):
+                  print(json.dumps({key: finding.get(key) for key in ('File', 'StartLine', 'RuleID', 'Fingerprint')}))
+          PY
+          exit "$status"
+      - name: Prove synthetic credential detection
+        if: always()
+        run: python scripts/secret-scan-proof.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: foundation-redacted-secret-report
+          path: /tmp/sl-secret-report/gitleaks.json
+          retention-days: 3

@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 — Phase 0 foundation
+
+Adds locked CPU/GPU environments, settings/secrets, immutable artifacts, explicit checksummed migrations, modular ownership and sealed validators, a same-DB worker/outbox with fenced commits and operation receipts, restore proof, and automated quality/security checks. Existing source inventory and statement semantics are preserved. Real-recording, live-provider and GPU validation remain separate external gates.
+
+## Earlier source-registry expansion
 
 Adds 13 source-registry entries, worksheets and onboarding tickets (SL-135 to SL-147): the
 Internet Archive TV News Archive; subject-operated social accounts, bylined writing, and

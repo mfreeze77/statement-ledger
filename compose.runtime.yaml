@@ -1,0 +1,22 @@
+# Runtime image, without a source mount or development dependencies.
+# Run an explicit migration with the same image before starting api/worker.
+name: statement-ledger
+services:
+  api:
+    build:
+      context: .
+      target: runtime
+    env_file: .env
+    environment:
+      SL_DATA_ROOT: /data
+      SL_DB_PATH: /data/db/ledger.sqlite3
+      SL_HOST: 0.0.0.0
+    ports: ["127.0.0.1:8765:8765"]
+    volumes: [statement-ledger-data:/data]
+    read_only: true
+    tmpfs: [/tmp:rw,noexec,nosuid,size=256m]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    restart: unless-stopped
+volumes:
+  statement-ledger-data:

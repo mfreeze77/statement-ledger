@@ -1,0 +1,40 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "asset_id": {
+      "title": "Asset Id",
+      "type": "string"
+    },
+    "engine": {
+      "default": "operator-import",
+      "title": "Engine",
+      "type": "string"
+    },
+    "expected_revision": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "format": {
+      "enum": [
+        "vtt",
+        "srt",
+        "asr"
+      ],
+      "title": "Format",
+      "type": "string"
+    },
+    "transcript_id": {
+      "title": "Transcript Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "asset_id",
+    "transcript_id",
+    "format"
+  ],
+  "title": "ImportTranscript",
+  "type": "object"
+}

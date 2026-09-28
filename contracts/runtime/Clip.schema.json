@@ -1,0 +1,32 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "asset_id": {
+      "title": "Asset Id",
+      "type": "string"
+    },
+    "end_ms": {
+      "exclusiveMinimum": 0,
+      "title": "End Ms",
+      "type": "integer"
+    },
+    "padding_ms": {
+      "default": 15000,
+      "minimum": 0,
+      "title": "Padding Ms",
+      "type": "integer"
+    },
+    "start_ms": {
+      "minimum": 0,
+      "title": "Start Ms",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "asset_id",
+    "start_ms",
+    "end_ms"
+  ],
+  "title": "Clip",
+  "type": "object"
+}

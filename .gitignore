@@ -25,3 +25,13 @@ data/
 *.bz2
 *.gz
 .DS_Store
+
+# Foundation runtime outputs (real assets never belong in Git).
+.mypy_cache/
+.ruff_cache/
+local-models/
+.env.local
+*.sqlite
+*.sqlite-journal
+*.sqlite3-journal
+*.db-journal

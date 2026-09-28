@@ -13,7 +13,10 @@
     "next_step": "Configure an API key and explicit query/page budgets; approve retention policy.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {
+      "api_key": "YOUTUBE_API_KEY"
+    }
   },
   {
     "id": "cnn_transcripts",
@@ -29,7 +32,8 @@
     "next_step": "Obtain permitted exports; capture a real schema fixture before a dedicated adapter.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "cbs_transcripts",
@@ -45,7 +49,8 @@
     "next_step": "Use permitted transcript export and the manual input contract.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "internet_archive",
@@ -61,7 +66,8 @@
     "next_step": "Inspect item-level availability and rights before selecting files.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "gdelt_tv",
@@ -77,7 +83,8 @@
     "next_step": "Capture current endpoint/response contract; do not assume archive completeness.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "gdelt_visual",
@@ -93,7 +100,8 @@
     "next_step": "Locate current Visual Explorer documentation and a permitted export; the previously proposed deep-link could not be verified.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "gdelt_tv_ngrams",
@@ -109,7 +117,8 @@
     "next_step": "Obtain documented sample files and implement a frequency-only adapter.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "gdelt_gqg",
@@ -125,7 +134,8 @@
     "next_step": "Download an authorized dated .gqg.json.gz file, retain checksum, then ingest.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "quotebank",
@@ -137,11 +147,12 @@
     "documentation_urls": [
       "https://zenodo.org/records/4277311"
     ],
-    "limitations": "Historical 2008\u20132020 quotations; probabilistic speaker labels remain leads.",
+    "limitations": "Historical 2008–2020 quotations; probabilistic speaker labels remain leads.",
     "next_step": "Review dataset rights and choose quotation-centric JSONL .bz2.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "media_cloud",
@@ -157,7 +168,8 @@
     "next_step": "Obtain credentials and a current first-party client response fixture.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "lexisnexis",
@@ -173,7 +185,8 @@
     "next_step": "Negotiate transcript exports or a feed; supply actual schema samples.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "tveyes",
@@ -189,7 +202,8 @@
     "next_step": "Request evaluation transcript/audio package and written retention/derivation rights.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "critical_mention",
@@ -205,7 +219,8 @@
     "next_step": "Request credentials, pagination contract, historical backfill limits, sample records.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "sprinklr",
@@ -221,7 +236,8 @@
     "next_step": "Verify purchased package exports and exact permitted content fields.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "snapstream",
@@ -237,7 +253,8 @@
     "next_step": "Obtain authorized recording export plus captions and program metadata.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "grabien",
@@ -253,7 +270,8 @@
     "next_step": "Request permitted exports or partnership access; link clips to original events.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "aapb",
@@ -269,7 +287,8 @@
     "next_step": "Use metadata client; request transcript credentials and capture actual samples.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "cspan",
@@ -285,7 +304,8 @@
     "next_step": "Obtain permitted source records; confirm original program and time alignment.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "vanderbilt",
@@ -301,7 +321,8 @@
     "next_step": "Arrange permitted research access and record restrictions per item.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "google_fact_check",
@@ -317,7 +338,10 @@
     "next_step": "Configure key; use claim/publisher queries and preserve pagination.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {
+      "api_key": "FACTCHECK_API_KEY"
+    }
   },
   {
     "id": "claimreview",
@@ -333,7 +357,8 @@
     "next_step": "Import authorized JSON/JSON-LD while retaining the actual publishing organization.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "fact_check_insights",
@@ -349,7 +374,8 @@
     "next_step": "Obtain authorized JSON export; clarify compilation/media/commercial permissions.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "media_vault",
@@ -365,7 +391,8 @@
     "next_step": "Request access and sample MediaReview records; preserve source-media chain.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "politifact",
@@ -381,7 +408,8 @@
     "next_step": "Use permitted ClaimReview or manual exports; preserve external review identity.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "punditfact",
@@ -397,7 +425,8 @@
     "next_step": "Link to canonical publisher review; trace its source broadcast.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "factcheck_org",
@@ -413,7 +442,8 @@
     "next_step": "Import permitted article references and primary-evidence links.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "reuters_fact_check",
@@ -429,7 +459,8 @@
     "next_step": "Retain attributed review; independently match the actual claim scope.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "afp_fact_check",
@@ -445,7 +476,8 @@
     "next_step": "Preserve source references, language, translation, and assessed-media identity.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "media_matters",
@@ -461,7 +493,8 @@
     "next_step": "Verify original context and maintain independent source coverage inventory.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "mrc",
@@ -477,7 +510,8 @@
     "next_step": "Trace underlying source material and preserve selection origin.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "newsbusters",
@@ -493,7 +527,8 @@
     "next_step": "Treat excerpts as leads, not automatically accepted speaker statements.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "newsguard",
@@ -509,7 +544,8 @@
     "next_step": "Negotiate feed; preserve provider fields without normalizing outlet/person scores.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "full_fact_ai",
@@ -525,7 +561,8 @@
     "next_step": "Evaluate software integration or partnership separately from a data license.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "manual_import",
@@ -541,7 +578,8 @@
     "next_step": "Supply an explicit rights grant and the documented manual JSON envelope.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "tv_news_archive",
@@ -557,7 +595,8 @@
     "next_step": "Capture a bounded caption-search sample and record which program, date and preview fields are actually returned.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "subject_social_accounts",
@@ -571,7 +610,8 @@
     "next_step": "Establish reviewed account ownership for each platform, then obtain a permitted export or API grant; use the manual envelope until then.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "subject_written_work",
@@ -585,7 +625,8 @@
     "next_step": "Inventory bylines through permitted publisher pages or feeds; retain the publication version and any correction notice.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "podcasts_radio",
@@ -601,7 +642,8 @@
     "next_step": "Build a bounded inventory of relevant show feeds and record per-show terms before any audio acquisition.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "congress_gov",
@@ -617,7 +659,8 @@
     "next_step": "Request an API key; capture a bounded sample for one bill and record the retrieved version and action date.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "govinfo",
@@ -633,7 +676,8 @@
     "next_step": "Request an API key; capture a bounded document package and retain its package identifier and granule locator.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "federal_register",
@@ -649,7 +693,8 @@
     "next_step": "Capture a bounded document sample and record document type, docket and effective date.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "bls",
@@ -665,7 +710,8 @@
     "next_step": "Capture a bounded series sample and record series ID, adjustment, period and release vintage.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "census",
@@ -681,7 +727,8 @@
     "next_step": "Capture a bounded table sample and record dataset, vintage, geography and margin of error.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "fred",
@@ -697,7 +744,8 @@
     "next_step": "Request an API key; capture a bounded series sample with its originating source and vintage dates.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "openfec",
@@ -713,7 +761,8 @@
     "next_step": "Request an API key; capture a bounded committee sample and record filing and amendment identifiers.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "courtlistener",
@@ -729,7 +778,8 @@
     "next_step": "Request an API token; capture a bounded docket and opinion sample and record court, docket number and document type.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   },
   {
     "id": "official_publications",
@@ -743,6 +793,7 @@
     "next_step": "Import through the manual envelope with the actual publishing body as source; add a dedicated entry once a source recurs.",
     "enabled_by_default": false,
     "live_connection_verified": false,
-    "reviewed_on": "2026-09-27"
+    "reviewed_on": "2026-09-27",
+    "credential_refs": {}
   }
 ]

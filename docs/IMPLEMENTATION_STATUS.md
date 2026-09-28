@@ -1,6 +1,6 @@
-# Implementation status — v0.2.0
+# Implementation status — v0.3.0
 
-The 29-chapter specification defines the target and this release. Status below distinguishes local code, mocked external contracts, and remaining integration. Historical v0.1 chapter language does not supersede this table.
+See [Phase 0 status](PHASE0_STATUS.md), [operating guide](runbooks/FOUNDATION.md) and [validation](PHASE0_VALIDATION.md). Historical product chapters do not supersede this table. Root Python modules are temporary compatibility exports to the new module owners.
 
 | ID | Capability | State | Evidence | Boundary |
 |---|---|---|---|---|
@@ -20,13 +20,13 @@ The 29-chapter specification defines the target and this release. Status below d
 | SL-C14 | Claim/evidence/review recording | implemented_local_tested | models.py; service.py | Validation of provenance/scope/relations; humans supply interpretations. Not autonomous fact-checking. |
 | SL-C15 | Corrections | partly_implemented | models.py; service.py; claim_library.py | Open corrections block review-card reuse; explicit resolved records supported; full adjudication UI pending. |
 | SL-C16 | Coverage records | partly_implemented | models.py; service.py | Manual bounded coverage records; automatic run reconciliation pending. |
-| SL-C17 | Durable job leases | implemented_local_tested | jobs.py; test_jobs.py | Queue primitives tested. No fully connected worker/scheduler/outbox consumer. |
+| SL-C17 | Durable job leases | implemented_local_tested | infrastructure/queue.py; infrastructure/worker.py; application/handlers.py | Connected same-DB worker/outbox, leases, heartbeats, cancellation and fenced results. Explicit handlers only; no autonomous scheduler. |
 | SL-C18 | Raw retention and rights | partly_implemented | ingest.py; policy.py | Source-level grants and expiry gates; purge/revocation propagation and asset-level grants pending. |
 | SL-C19 | Operator UI | implemented_static_route_tested_browser_blocked | static/; tests/test_acceleration_interfaces.py | Profiles, window planner and claim-search views added; actual browser navigation blocked, no visual pass. |
 | SL-C20 | Auditing and backup | implemented_local_tested | store.py; cli.py | Native SQLite backup, exact-byte provider receipt retention and JSON base64 export; not externally witnessed tamper-proof storage. |
-| SL-C21 | Production database and deployment | specified_not_implemented | docs/spec/11_ARCHITECTURE_AND_STORAGE.md | SQLite core only. Migration, role-based multi-user auth, external object storage and production rollout pending. |
+| SL-C21 | Production database and deployment | partly_implemented | Dockerfile; compose.yaml; infrastructure/migrations/; docs/runbooks/FOUNDATION.md | Single-owner local SQLite environments/migrations delivered. Multi-user SaaS, PostgreSQL and production rollout are not implemented. |
 | SL-C22 | Real subject investigation | not_executed | config/subject.scott-jennings.json | Name-only seed. No real appearances, quotes, allegations, or findings loaded. |
-| SL-C23 | Remote GitHub repository | not_created | scripts/publish-github.* | Separate local Git history and publishing helpers; no connected create-repository action. |
+| SL-C23 | Remote GitHub repository | created_and_baseline_ci_verified | mfreeze77/statement-ledger main ffcb18b; GitHub Actions baseline run 36360621237 | Phase 0 edits are proposed in a branch/PR; original main history is preserved. |
 | SL-C24 | Public publication | disabled_and_not_implemented | docs/spec/16_EVALUATION_AND_RELEASE_GATES.md | Internal research only; independent publication, permissions and review gates required. |
 | SL-C25 | Shared claim library and seed ingestion | implemented_local_tested | claim_library.py; claim_seeds.py | FTS5 and exact seed dedup; no automatic truth import or large real-corpus benchmark. |
 | SL-C26 | Reusable reviewed evidence cards | implemented_local_tested | claim_library.py; acceleration_service.py | Current exact proposition/review bindings, expiry, corrections and scope; never automatic verdict reuse. |
@@ -37,10 +37,6 @@ The 29-chapter specification defines the target and this release. Status below d
 | SL-C31 | Jev claim and window orchestration | implemented_mock_tested | acceleration.py; claim_library.py | Bounded batches and cached typed proposals; no identity or finding approval. |
 | SL-C32 | Selective local audio execution | implemented_local_tested | media_work.py; media.py | Synthetic FFmpeg execution and durable manifests verified; real ASR/diarization unexecuted. |
 | SL-C33 | Localization evaluation and cost estimates | implemented_local_tested | evaluation.py | Coverage/calibration diagnostics and user-priced costs; no fitted calibrator, deployed thresholds or real speedup guarantee. |
-| SL-C34 | Additive v0.1 database upgrade | implemented_local_tested | store.py; tests/test_acceleration_interfaces.py | Adds index/receipts without rewriting original hashes; use native backup before upgrade. |
+| SL-C34 | Additive v0.1 database upgrade | implemented_local_tested | infrastructure/migrations/; tests/test_foundation.py | Numbered checksummed legacy adoption; no historical payload/hash rewrite; native backup and explicit runtime migration required. |
 
-Paths refer to `src/statement_ledger/` unless prefixed otherwise. `implemented_local_tested` means exercised with local/synthetic inputs; it is not a real-corpus result. `implemented_mock_tested` never means live provider verification. See [validation](VALIDATION_REPORT.md).
-
-## Next gate
-
-Collect an authorized, human-labeled, cross-program held-out corpus; validate the pinned TypeSafe contract using a bounded authorized live call; compare whole-audio, phrase-only and Jev-assisted routing under the same cost and coverage measurement. Keep default shadow mode until accepted evidence supports an explicit assist policy. Continue source onboarding without discarding any original registry entry.
+Next evidence gate: authorized held-out recordings, reviewed attribution labels, and explicit GPU/provider prerequisites. Keep default shadow mode until real measurements justify a policy change.

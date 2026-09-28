@@ -1,28 +1,67 @@
 [build-system]
-requires = ["setuptools>=77"]
+requires = ["setuptools==80.9.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "statement-ledger"
-version = "0.2.0"
+version = "0.3.0"
 description = "Source-bound public statement research ledger with reviewed identity and evidence provenance"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.14"
 dependencies = ["fastapi==0.128.2", "pydantic==2.13.4", "httpx==0.28.1", "uvicorn==0.48.0"]
 
 [project.optional-dependencies]
-test = ["pytest==9.0.2", "pytest-cov>=6,<8"]
+test = ["pytest==9.0.2", "pytest-cov==7.0.0"]
+
+[dependency-groups]
+dev = ["pytest==9.0.2", "pytest-cov==7.0.0", "ruff==0.14.10", "mypy==1.19.1", "pre-commit==4.5.1"]
 
 [project.scripts]
-statement-ledger = "statement_ledger.cli:main"
+statement-ledger = "statement_ledger.application.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-statement_ledger = ["static/*", "sources.json"]
+statement_ledger = ["static/*", "sources.json", "infrastructure/migrations/*.sql"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = "-ra"
 markers = ["live: needs secrets, real providers, GPU or licensed media; runs only with SL_RUN_LIVE=1"]
+
+[tool.ruff]
+required-version = "==0.14.10"
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+follow_imports = "silent"
+untyped_calls_exclude = ["statement_ledger.infrastructure.providers.jev", "statement_ledger.pillars.speech.localization"]
+files = [
+ "src/statement_ledger/contracts/runtime.py",
+ "src/statement_ledger/core/validation.py",
+ "src/statement_ledger/infrastructure/settings.py",
+ "src/statement_ledger/infrastructure/secrets.py",
+ "src/statement_ledger/infrastructure/artifacts.py",
+ "src/statement_ledger/infrastructure/logging.py",
+ "src/statement_ledger/infrastructure/migrations/__init__.py",
+ "src/statement_ledger/infrastructure/queue.py",
+ "src/statement_ledger/infrastructure/operations.py",
+ "src/statement_ledger/infrastructure/worker.py",
+ "src/statement_ledger/infrastructure/backup.py",
+ "src/statement_ledger/infrastructure/providers/local_model.py",
+ "src/statement_ledger/application/handlers.py",
+ "src/statement_ledger/application/runtime.py",
+]
+# Optional GPU packages are installed only in environments/gpu. This exemption
+# permits imports, not unchecked core configuration, contracts, or worker methods.
+[[tool.mypy.overrides]]
+module = ["torch.*", "faster_whisper.*", "pyannote.*", "speechbrain.*"]
+ignore_missing_imports = true
+follow_imports = "skip"

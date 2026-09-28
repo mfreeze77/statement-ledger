@@ -79,9 +79,17 @@
       "type": "array"
     },
     "latency_ms": {
-      "minimum": 0,
-      "title": "Latency Ms",
-      "type": "number"
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Latency Ms"
     },
     "model_requested": {
       "maxLength": 100000,
@@ -172,7 +180,6 @@
     "bindings",
     "state_sha256",
     "status",
-    "latency_ms",
     "captured_at"
   ],
   "title": "DecisionRun",
