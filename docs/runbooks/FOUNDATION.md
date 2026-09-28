@@ -31,7 +31,7 @@ Default roots below `SL_DATA_ROOT`: `db`, `artifacts`, `raw`, `media`, `models`,
 
 The new default database is `data/db/ledger.sqlite3`. If `data/ledger.sqlite3` from the old runtime exists, migration refuses to create another empty ledger beside it: set `SL_DB_PATH` to the old file explicitly, take a native backup, then run `statement-ledger migrate`. API and workers NEVER perform startup DDL. Fresh tests/demos use an explicit bootstrap; `Store(initialize=True)` is retained only for disposable fixtures. New/runtime code uses `Store(path)` after migration.
 
-Migrations 001-003 are contiguous SQL files with committed checksums. Do not edit applied migrations. Legacy v0.1/v0.2 records, hashes and audit rows are not rewritten. Unknown/future versions, changed checksums, partial schemas, and populated legacy job databases fail closed. Custom legacy queue paths must be supplied via `--legacy-jobs` or `SL_LEGACY_JOBS_PATH`. Reconcile those jobs explicitly; they are never abandoned or guessed into new jobs.
+Migrations 001-003 are contiguous SQL files with committed checksums. Do not edit applied migrations. Legacy v0.1/v0.2 records, hashes and audit rows are not rewritten. Unknown/future versions, changed checksums, partial schemas, and non-terminal legacy jobs fail closed. Finished legacy jobs are retained unchanged, including in-ledger jobs; they do not block migration. Custom legacy queue paths must be supplied via `--legacy-jobs` or `SL_LEGACY_JOBS_PATH`. Reconcile those jobs explicitly; they are never abandoned or guessed into new jobs.
 
 DELETE journal mode is the safe default. WAL is allowed only for a documented fixed linked SQLite runtime (3.51.3+, 3.50.7 backport, or 3.44.6 backport). See the SQLite WAL documentation. Python dependency pinning does not pin the linked SQLite library. `doctor` records the actual runtime. Container bases and tools are digest/version pinned; OS package metadata and GPU hardware are also recorded/checked rather than claiming all platforms have identical binaries.
 
@@ -49,7 +49,7 @@ Stop/drain workers first; a backup with running jobs is refused. Backup takes a 
 
 ## Work and failure semantics
 
-Use `statement-ledger config` for the execution fingerprint and version/hash bindings from the ledger. A `JobRequest` lists exact inputs, registered artifacts, handler/version, run ID, capability and configuration hash. Examples are generated in the synthetic proof; JSON schemas are in `contracts/runtime/`. Commands: `enqueue FILE`, `worker --once`, `worker`, `jobs`, `dispatch`, `cancel-job ID`. Authenticated equivalents include `/api/jobs` and cancellation. One GPU worker runs one job at a time.
+Use `statement-ledger config` for the execution fingerprint and version/hash bindings from the ledger. A `JobRequest` lists exact inputs, registered artifacts, handler/version, run ID, capability and configuration hash. Examples are generated in the synthetic proof; JSON schemas are in `contracts/runtime/`. Commands: `enqueue FILE`, `worker --once`, `worker`, `jobs`, `dispatch`, `cancel-job ID`, and `requeue-job ID --reason "reviewed recovery" --additional-attempts 1`. Authenticated equivalents include `/api/jobs` and cancellation. One GPU worker runs one job at a time.
 
 Implemented handlers:
 - `transcript.import` (CPU): retained VTT/SRT/ASR artifact -> proposed transcript.
@@ -69,3 +69,18 @@ For Jev, set `SL_ENABLE_JEV=1`, the credential, a positive `SL_REMOTE_ESTIMATE_M
 `make gpu` builds the separate Python 3.11 CUDA-compatible environment and requests one NVIDIA GPU. It does not acquire model weights or accept model licenses. Provision authorized CTranslate2 files under ignored `local-models/whisper`, then use `python scripts/model-manifest.py local-models/whisper --revision PINNED_REVISION --confirm-rights`. Keep the directory immutable and mounted read-only. Use a new versioned name for a different model. The manifest hash is required in a GPU job. `docker compose --profile gpu run --rm --no-deps gpu-worker statement-ledger doctor --gpu` must confirm real device availability. CPU CI and dependency resolution are not GPU-inference proof.
 
 Keep the real-recording experiment bounded and held out. It still requires authorized recordings, reviewed speaker labels, actual GPU/model provision, and explicit provider-spend choices. Compare whole-file, phrase-only and Jev-assisted routing on the same corpus; retain coverage, wrong attribution, selected duration, full cost and human effort. No profile promotion or savings claim follows from the synthetic proof.
+
+## Recovery after review fixes
+
+Repeated enqueue returns the existing job state and `requeue_required`; it does not silently
+revive terminal work. Explicit authenticated requeue grants bounded additional attempts and
+retains all old attempt ordinals/receipts. It never skips current inputs, rights or cancellation
+checks. Ambiguous paid operations stay blocked even after requeue or cost reconciliation.
+Successful source-bound Jev proposals are persisted before canonical publication and can be
+recovered after database contention without paying twice. Cancellation is checked before
+reservation and before transport; only a known-unsent call releases its budget as zero cost.
+See [review remediation](../PR1_REVIEW_FIXES.md) for the twelve regressions and limitations.
+
+`SL_RUN_LIVE` is a recognized test-runner control, not a provider-spending switch. The main
+branch's exact-marker live gate is retained: tests needing providers, secrets or actual GPU
+execution are skipped in ordinary checks. Never set it in cloud-agent CI to avoid the gate.

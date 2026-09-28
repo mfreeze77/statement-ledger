@@ -91,12 +91,25 @@ def _tables(connection: sqlite3.Connection) -> set[str]:
     }
 
 
+def _check_legacy_jobs(connection: sqlite3.Connection) -> None:
+    if "jobs" not in _tables(connection):
+        return
+    columns = {row[1] for row in connection.execute('PRAGMA table_info("jobs")')}
+    if "state" not in columns:
+        raise MigrationError("Unrecognized legacy jobs schema; manual reconciliation is required")
+    count = connection.execute(
+        "SELECT count(*) FROM jobs WHERE state IS NULL OR state NOT IN ('succeeded','failed','cancelled')"
+    ).fetchone()[0]
+    if count:
+        raise MigrationError(
+            "Legacy jobs have non-terminal records; export and reconcile them before migration. "
+            "Finished jobs are retained unchanged."
+        )
+
+
 def _legacy_check(connection: sqlite3.Connection) -> None:
     tables = _tables(connection)
-    if "jobs" in tables and connection.execute("SELECT count(*) FROM jobs").fetchone()[0]:
-        raise MigrationError(
-            "Legacy jobs are present. Export and reconcile them explicitly before migration; no jobs were discarded"
-        )
+    _check_legacy_jobs(connection)
     if tables & set(CORE_COLUMNS) and not set(CORE_COLUMNS) <= tables:
         raise MigrationError("Partial or unknown legacy database layout")
     if tables and not set(CORE_COLUMNS) <= tables and "foundation_migrations" not in tables:
@@ -133,9 +146,10 @@ def check_schema(connection: sqlite3.Connection) -> None:
         "provider_operations",
         "claim_search",
         "provider_receipts",
-    }
+        "schema_migrations",
+    } | set(CORE_COLUMNS)
     if not required <= _tables(connection):
-        raise MigrationError("Database is missing required runtime tables")
+        raise MigrationError("Database is missing required core or runtime tables")
 
 
 def migrate_connection(
@@ -221,13 +235,10 @@ def migrate(
         and legacy_jobs_path.resolve() != path.resolve()
     ):
         with sqlite3.connect(legacy_jobs_path.resolve().as_uri() + "?mode=ro", uri=True) as legacy:
-            if (
-                "jobs" in _tables(legacy)
-                and legacy.execute("SELECT count(*) FROM jobs").fetchone()[0]
-            ):
-                raise MigrationError(
-                    "A separate legacy jobs database has outstanding records; reconciliation is required"
-                )
+            try:
+                _check_legacy_jobs(legacy)
+            except MigrationError as exc:
+                raise MigrationError("A separate legacy jobs database: " + str(exc)) from None
     path.parent.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(path, isolation_level=None, timeout=30)
     try:

@@ -28,9 +28,10 @@ def backup(settings: Settings, destination: Path) -> dict[str, Any]:
     if destination.exists():
         raise ValueError("Backup destination must not exist")
     destination.mkdir(parents=True)
-    store = Store(settings.database, journal_mode=settings.journal_mode)
-    artifacts = LocalArtifactStore(settings.artifacts)
+    store = None
     try:
+        store = Store(settings.database, journal_mode=settings.journal_mode)
+        artifacts = LocalArtifactStore(settings.artifacts)
         # A writer reservation freezes accepted references and stops concurrent result commits.
         with store.transaction():
             active = store.db.execute(
@@ -43,6 +44,8 @@ def backup(settings: Settings, destination: Path) -> dict[str, Any]:
             output = sqlite3.connect(database_path)
             try:
                 reader.backup(output)
+                # A portable snapshot must not depend on WAL/SHM sidecars. Source stays unchanged.
+                output.execute("PRAGMA journal_mode=DELETE")
             finally:
                 output.close()
                 reader.close()
@@ -82,7 +85,8 @@ def backup(settings: Settings, destination: Path) -> dict[str, Any]:
         shutil.rmtree(destination)
         raise
     finally:
-        store.close()
+        if store is not None:
+            store.close()
 
 
 def restore(source: Path, destination: Path) -> dict[str, Any]:
@@ -122,7 +126,10 @@ def restore(source: Path, destination: Path) -> dict[str, Any]:
         database.close()
     try:
         (destination / "db").mkdir(parents=True)
-        shutil.copyfile(source / "ledger.sqlite3", destination / "db" / "ledger.sqlite3")
+        copied_database = destination / "db" / "ledger.sqlite3"
+        shutil.copyfile(source / "ledger.sqlite3", copied_database)
+        if checksum(copied_database) != manifest["database_sha256"]:
+            raise ValueError("Restored database copy checksum mismatch")
         target_store = LocalArtifactStore(destination / "artifacts")
         for entry in manifest["artifacts"]:
             with source_store.open(entry["key"]) as stream:

@@ -38,6 +38,7 @@ COMMANDS = frozenset(
         "jobs",
         "dispatch",
         "cancel-job",
+        "requeue-job",
         "backup-workspace",
         "restore-workspace",
         "operations",
@@ -62,6 +63,10 @@ def add_commands(subparsers: Any) -> None:
     subparsers.add_parser("dispatch")
     parser = subparsers.add_parser("cancel-job")
     parser.add_argument("job_id")
+    parser = subparsers.add_parser("requeue-job")
+    parser.add_argument("job_id")
+    parser.add_argument("--reason", required=True)
+    parser.add_argument("--additional-attempts", type=int, default=1)
     parser = subparsers.add_parser("backup-workspace")
     parser.add_argument("destination", type=Path)
     parser = subparsers.add_parser("restore-workspace")
@@ -183,11 +188,7 @@ def execute(args: argparse.Namespace, settings: Settings) -> dict[str, Any]:
             handler.validate(ledger, request)
             if request.config_sha256 != settings.execution_hash():
                 raise ValueError("Use the current execution_hash reported by config")
-            return {
-                "job_id": queue.submit(request),
-                "run_id": request.run_id,
-                "state": "outbox_pending",
-            }
+            return {**queue.submit_with_status(request), "run_id": request.run_id}
         if args.command == "dispatch":
             return queue.dispatch()
         if args.command == "jobs":
@@ -195,6 +196,10 @@ def execute(args: argparse.Namespace, settings: Settings) -> dict[str, Any]:
         if args.command == "cancel-job":
             queue.cancel(args.job_id)
             return queue.get(args.job_id)
+        if args.command == "requeue-job":
+            return queue.requeue(
+                args.job_id, reason=args.reason, additional_attempts=args.additional_attempts
+            )
         if args.command == "operations":
             return {"operations": OperationJournal(store).list()}
         if args.command == "reconcile-operation":

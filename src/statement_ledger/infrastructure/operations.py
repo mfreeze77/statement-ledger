@@ -35,11 +35,17 @@ class OperationJournal:
             raise OperationBlocked("A positive explicit remote budget and estimate are required")
         with self.store.transaction():
             existing = self.store.db.execute(
-                "SELECT state,request_hash FROM provider_operations WHERE id=?", (operation_id,)
-            ).fetchone()
-            if existing is not None:
+                "SELECT id,state,request_hash,provider FROM provider_operations WHERE id=? OR (request_hash=? AND provider=? AND state!='cancelled')",
+                (operation_id, request_hash, provider),
+            ).fetchall()
+            if any(
+                row["state"] != "cancelled"
+                or row["request_hash"] != request_hash
+                or row["provider"] != provider
+                for row in existing
+            ):
                 raise OperationBlocked(
-                    "Operation already recorded; recover its captured response or reconcile it before retrying"
+                    "Request already recorded; recover its captured decision or reconcile the operation"
                 )
             reserved = self.store.db.execute(
                 "SELECT COALESCE(SUM(COALESCE(actual_micro_usd,estimated_micro_usd)),0) FROM provider_operations WHERE state!='cancelled'"
@@ -47,7 +53,7 @@ class OperationJournal:
             if reserved + estimate_micro_usd > budget_micro_usd:
                 raise OperationBlocked("Remote budget would be exceeded")
             self.store.db.execute(
-                "INSERT INTO provider_operations(id,request_hash,provider,state,estimated_micro_usd,started_at,cost_status) VALUES(?,?,?,'started',?,?,'estimated')",
+                "INSERT INTO provider_operations(id,request_hash,provider,state,estimated_micro_usd,started_at,cost_status) VALUES(?,?,?,'started',?,?,'estimated') ON CONFLICT(id) DO UPDATE SET state='started',estimated_micro_usd=excluded.estimated_micro_usd,started_at=excluded.started_at,finished_at=NULL,actual_micro_usd=NULL,usage=NULL,cost_status='estimated'",
                 (operation_id, request_hash, provider, estimate_micro_usd, time.time()),
             )
             self.store.audit(
@@ -86,6 +92,35 @@ class OperationJournal:
                 "UPDATE provider_operations SET state='unknown',cost_status='unknown',finished_at=? WHERE id=? AND state='started'",
                 (time.time(), operation_id),
             )
+
+    def cancel_unsent(self, operation_id: str) -> None:
+        """Only the owning handler before network submission may declare zero external effect."""
+        with self.store.transaction():
+            cursor = self.store.db.execute(
+                "UPDATE provider_operations SET state='cancelled',cost_status='actual',actual_micro_usd=0,finished_at=? WHERE id=? AND state='started'",
+                (time.time(), operation_id),
+            )
+            if cursor.rowcount != 1:
+                raise OperationBlocked("Unsent operation is no longer owned")
+            self.store.audit(
+                {"type": "provider.operation_cancelled_unsent", "operation_id": operation_id}
+            )
+
+    def recover_decision(self, request_hash: str, provider: str) -> dict[str, Any] | None:
+        rows = self.store.db.execute(
+            "SELECT state,usage FROM provider_operations WHERE request_hash=? AND provider=? AND state!='cancelled' ORDER BY started_at,id",
+            (request_hash, provider),
+        ).fetchall()
+        if any(row["state"] in {"started", "unknown"} for row in rows):
+            raise OperationBlocked(
+                "Unresolved remote outcome; automatic repeat spending is forbidden"
+            )
+        for row in rows:
+            usage = json.loads(row["usage"]) if row["usage"] else {}
+            payload = usage.get("decision")
+            if isinstance(payload, dict) and payload.get("request_hash") == request_hash:
+                return payload
+        return None
 
     def reconcile(self, operation_id: str, *, actual_micro_usd: int, evidence: str) -> None:
         if not evidence.strip() or type(actual_micro_usd) is not int or actual_micro_usd < 0:

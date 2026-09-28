@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+import sqlite3
 import threading
 import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
+import httpx
+
 from statement_ledger.contracts.runtime import JobRequest
+from statement_ledger.core.errors import TransientFailure
 from statement_ledger.core.validation import ReadLedger
 from statement_ledger.infrastructure.artifacts import Artifact, LocalArtifactStore
 from statement_ledger.infrastructure.logging import event
@@ -22,8 +26,23 @@ class StaleInput(RuntimeError):
     pass
 
 
-class RetryableWork(RuntimeError):
+class RetryableWork(TransientFailure):
     pass
+
+
+def transient_error(error: BaseException) -> bool:
+    if isinstance(error, (TransientFailure, httpx.TransportError, TimeoutError)):
+        return True
+    if isinstance(error, sqlite3.OperationalError):
+        code = getattr(error, "sqlite_errorcode", 0)
+        return (code & 255) in {sqlite3.SQLITE_BUSY, sqlite3.SQLITE_LOCKED} or str(
+            error
+        ).lower() in {
+            "database is locked",
+            "database table is locked",
+            "database schema is locked",
+        }
+    return False
 
 
 @dataclass(frozen=True)
@@ -136,6 +155,11 @@ class Worker:
             handler=request.handler,
         )
         try:
+            if self.heartbeat_enabled:
+                thread = threading.Thread(
+                    target=self._heartbeat, args=(job, done, lost), daemon=True
+                )
+                thread.start()
             handler = self.handlers.get(request.handler)
             if (
                 handler is None
@@ -149,19 +173,16 @@ class Worker:
                 )
             input_check(self.ledger, request)
             handler.validate(ReadLedger(self.ledger), request)
-            for value in request.artifacts.values():
-                self.artifacts.verify(Artifact(**value.model_dump()))
 
             def checkpoint() -> None:
                 if lost.is_set():
                     raise LeaseLost("Worker lost its lease while processing")
                 self.queue.assert_owned(job["id"], job["lease_token"])
 
-            if self.heartbeat_enabled:
-                thread = threading.Thread(
-                    target=self._heartbeat, args=(job, done, lost), daemon=True
-                )
-                thread.start()
+            for value in request.artifacts.values():
+                checkpoint()
+                self.artifacts.verify(Artifact(**value.model_dump()))
+            checkpoint()
             context = WorkContext(
                 ReadLedger(self.ledger),
                 self.artifacts,
@@ -227,7 +248,7 @@ class Worker:
                 else "operation_ambiguous_or_budget"
                 if isinstance(exc, OperationBlocked)
                 else "retryable_work"
-                if isinstance(exc, RetryableWork)
+                if transient_error(exc)
                 else "handler_rejected"
             )
             try:
@@ -235,11 +256,15 @@ class Worker:
                     job["id"],
                     job["lease_token"],
                     code,
-                    retryable=isinstance(exc, RetryableWork),
+                    retryable=transient_error(exc),
                     blocked=isinstance(exc, OperationBlocked),
                 )
             except LeaseLost:
                 pass
+            except sqlite3.OperationalError as failure:
+                if not transient_error(failure):
+                    raise
+                event("work.failure_deferred", job_id=job["id"], error_code="database_busy")
             event(
                 "work.failed",
                 run_id=request.run_id,
@@ -264,5 +289,12 @@ class Worker:
 
     def run(self) -> None:
         while not self.stop.is_set():
-            if self.run_once() is None:
+            try:
+                idle = self.run_once() is None
+            except sqlite3.OperationalError as exc:
+                if not transient_error(exc):
+                    raise
+                event("work.queue_deferred", error_code="database_busy")
+                idle = True
+            if idle:
                 self.stop.wait(self.settings.poll_seconds)

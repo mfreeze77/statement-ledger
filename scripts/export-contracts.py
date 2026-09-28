@@ -16,6 +16,7 @@ from statement_ledger.contracts.runtime import (  # noqa: E402
     JevDecision,
     JobRequest,
     Localize,
+    RequeueJob,
     Transcribe,
 )
 from statement_ledger.infrastructure.migrations import migrate  # noqa: E402
@@ -44,7 +45,7 @@ for name, model in (
         json.dumps(model.model_json_schema(), indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
 (out / "runtime").mkdir(exist_ok=True)
-for model in (JobRequest, ImportTranscript, Localize, Clip, JevDecision, Transcribe):
+for model in (JobRequest, ImportTranscript, Localize, Clip, JevDecision, Transcribe, RequeueJob):
     (out / "runtime" / f"{model.__name__}.schema.json").write_text(
         json.dumps(model.model_json_schema(), indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )

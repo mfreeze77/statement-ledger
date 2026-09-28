@@ -139,7 +139,7 @@ class LocalArtifactStore:
 
     def inspect_orphans(self, referenced_keys: set[str]) -> dict[str, list[str]]:
         present = {
-            str(path.relative_to(self.root))
+            path.relative_to(self.root).as_posix()
             for path in self.root.glob("sha256/*/*")
             if path.is_file() and not path.is_symlink()
         }

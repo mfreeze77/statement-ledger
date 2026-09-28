@@ -18,6 +18,9 @@ class ReadStore:
     def all(self, kind: str) -> list[dict[str, Any]]:
         return cast(list[dict[str, Any]], self.__store.all(kind))
 
+    def find_decisions(self, request_hash: str) -> list[dict[str, Any]]:
+        return cast(list[dict[str, Any]], self.__store.find_decisions(request_hash))
+
     def provider_receipt(self, receipt_id: str) -> dict[str, Any]:
         return cast(dict[str, Any], self.__store.provider_receipt(receipt_id))
 

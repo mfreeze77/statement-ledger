@@ -13,7 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from statement_ledger.application.ledger import Ledger
 from statement_ledger.contracts.acceleration import LocalizationConfig, ProfileConfig
 from statement_ledger.contracts.models import KINDS, Scope
-from statement_ledger.contracts.runtime import JobRequest
+from statement_ledger.contracts.runtime import JobRequest, RequeueJob
 from statement_ledger.contracts.source_catalog import sources
 from statement_ledger.core.errors import Conflict, Missing
 from statement_ledger.core.policy import scope_match
@@ -105,7 +105,7 @@ def create_app(db_path: str | None = None, token: str | None = None, settings=No
         if (
             not authorization
             or not authorization.startswith("Bearer ")
-            or not secrets.compare_digest(authorization[7:], secret)
+            or not secrets.compare_digest(authorization[7:].encode("utf-8"), secret.encode("utf-8"))
         ):
             raise HTTPException(
                 401, "Bearer authentication required", headers={"WWW-Authenticate": "Bearer"}
@@ -342,13 +342,19 @@ def create_app(db_path: str | None = None, token: str | None = None, settings=No
             raise ValueError("Execution configuration mismatch")
         input_check(ledger, body)
         registered.validate(ledger, body)
-        return {"job_id": RuntimeQueue(ledger.store).submit(body), "state": "outbox_pending"}
+        return RuntimeQueue(ledger.store).submit_with_status(body)
 
     @app.post("/api/jobs/{job_id}/cancel")
     def cancel(job_id: str, actor=Actor, ledger=DB):
         queue = RuntimeQueue(ledger.store)
         queue.cancel(job_id)
         return queue.get(job_id)
+
+    @app.post("/api/jobs/{job_id}/requeue")
+    def requeue(job_id: str, body: RequeueJob, actor=Actor, ledger=DB):
+        return RuntimeQueue(ledger.store).requeue(
+            job_id, reason=body.reason, additional_attempts=body.additional_attempts
+        )
 
     @app.get("/api/operations")
     def operations(actor=Actor, ledger=DB):

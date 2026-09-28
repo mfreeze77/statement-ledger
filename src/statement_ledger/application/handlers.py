@@ -17,6 +17,8 @@ from statement_ledger.contracts.runtime import (
 from statement_ledger.core.policy import require_right
 from statement_ledger.core.util import canonical_json, digest
 from statement_ledger.infrastructure.artifacts import Artifact
+from statement_ledger.infrastructure.operations import OperationBlocked
+from statement_ledger.infrastructure.queue import LeaseLost
 from statement_ledger.infrastructure.secrets import LocalSecrets
 from statement_ledger.infrastructure.worker import Handler, PreparedResult, RecordWrite, WorkContext
 from statement_ledger.pillars.media.clipping import clip_plan, local_clip
@@ -170,16 +172,34 @@ def prepare_jev(context: WorkContext, job: JobRequest) -> PreparedResult:
     request = params.request
     model = context.settings.jev_model
     key = digest({**request, "endpoint": ENDPOINT, "model": model, "validator": VALIDATOR_VERSION})
-    credential = LocalSecrets().value("TYPESAFE_API_KEY")
+    operation_id = "decision-" + key
+    context.check_cancelled()
+    # Reuse only current, source-bound decisions. Scores still confer no review authority.
+    for row in context.ledger.store.find_decisions(key):
+        if row["payload"]["status"] == "available" and context.ledger.dependencies_current(
+            "decision_run", row["id"]
+        ):
+            return PreparedResult(
+                records=[RecordWrite("decision_run", row["payload"], row["revision"])],
+                summary={"operation_id": operation_id, "cache_hit": True, "cost_status": "reused"},
+            )
     journal = context.operations
-    # One remote attempt per explicit operation. Ambiguous external effects are not retried.
+    recovered = journal.recover_decision(key, "typesafe")
+    if recovered is not None:
+        return PreparedResult(
+            records=[RecordWrite("decision_run", recovered)],
+            summary={"operation_id": operation_id, "cache_hit": True, "cost_status": "reused"},
+        )
+    credential = LocalSecrets().value("TYPESAFE_API_KEY")
+    context.check_cancelled()
     journal.begin(
-        context.job_id,
+        operation_id,
         key,
         "typesafe",
         estimate_micro_usd=context.settings.remote_estimate_micro_usd,
         budget_micro_usd=context.settings.remote_budget_micro_usd,
     )
+    submitted = False
     try:
 
         def capture(attempt: int, status: int | None, body: bytes, truncated: bool) -> str:
@@ -193,15 +213,17 @@ def prepare_jev(context: WorkContext, job: JobRequest) -> PreparedResult:
             )
 
         with JevClient(credential, config=JevConfig(model=model, max_attempts=1)) as client:
+            # Last check before any potentially paid external effect.
+            context.check_cancelled()
+            submitted = True
             result = client.evaluate(request["state"], request["questions"], capture=capture)
         if result["status"] == "unavailable":
-            journal.unknown(context.job_id)
-        else:
-            journal.complete(
-                context.job_id, {"usage": result["usage"], "receipt_ids": result["receipt_ids"]}
+            journal.unknown(operation_id)
+            raise OperationBlocked(
+                "Remote outcome is unavailable; inspect receipts before recovery"
             )
         payload = {
-            "id": "decision-" + context.job_id[4:],
+            "id": operation_id,
             "purpose": request["purpose"],
             "request_hash": key,
             "model_requested": model,
@@ -213,13 +235,32 @@ def prepare_jev(context: WorkContext, job: JobRequest) -> PreparedResult:
             "captured_at": now().isoformat(),
             **result,
         }
+        # Persist the full successful proposal before its fenced canonical commit. A busy
+        # commit or process restart can recover this result without another provider call.
+        journal.complete(
+            operation_id,
+            {
+                "usage": result["usage"],
+                "receipt_ids": result["receipt_ids"],
+                "decision": payload,
+            },
+        )
         return PreparedResult(
             records=[RecordWrite("decision_run", payload)],
-            summary={"operation_id": context.job_id, "cost_status": "unknown"},
+            summary={"operation_id": operation_id, "cache_hit": False, "cost_status": "unknown"},
         )
-    except BaseException:
-        journal.unknown(context.job_id)
-        raise
+    except BaseException as exc:
+        if not submitted:
+            journal.cancel_unsent(operation_id)
+            raise
+        try:
+            journal.unknown(operation_id)
+        except Exception:
+            # A retained 'started' reservation is also ambiguous and blocks re-spending.
+            pass
+        if isinstance(exc, (LeaseLost, OperationBlocked, KeyboardInterrupt, SystemExit)):
+            raise
+        raise OperationBlocked("Remote attempt requires receipt reconciliation") from None
 
 
 def validate_transcribe(ledger: Any, job: JobRequest) -> None:

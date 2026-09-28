@@ -70,3 +70,8 @@ class Transcribe(RuntimeModel):
     transcript_id: str
     model_manifest_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     expected_revision: int = Field(default=0, ge=0, strict=True)
+
+
+class RequeueJob(RuntimeModel):
+    reason: str = Field(min_length=1, max_length=2000)
+    additional_attempts: int = Field(default=1, ge=1, le=10, strict=True)

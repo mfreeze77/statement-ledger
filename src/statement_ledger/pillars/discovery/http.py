@@ -13,8 +13,14 @@ from urllib.parse import quote
 
 import httpx
 
+from statement_ledger.core.errors import TransientFailure
+
 
 class SourceError(RuntimeError):
+    pass
+
+
+class SourceUnavailable(SourceError, TransientFailure):
     pass
 
 
@@ -62,7 +68,7 @@ class JSONClient:
                         if attempt < self.retries:
                             self.sleep(min(2**attempt, 8))
                             continue
-                        raise SourceError(
+                        raise SourceUnavailable(
                             f"Upstream temporarily unavailable ({response.status_code})"
                         )
                     if not 200 <= response.status_code < 300:
@@ -85,9 +91,9 @@ class JSONClient:
                     return data
             except httpx.TransportError:
                 if attempt == self.retries:
-                    raise SourceError("Upstream transport failed") from None
+                    raise SourceUnavailable("Upstream transport failed") from None
                 self.sleep(min(2**attempt, 8))
-        raise SourceError("Retry budget exhausted")
+        raise SourceUnavailable("Retry budget exhausted")
 
 
 class YouTubeClient(JSONClient):
@@ -95,7 +101,7 @@ class YouTubeClient(JSONClient):
         if not api_key:
             raise ValueError("YOUTUBE_API_KEY is required")
         super().__init__("https://www.googleapis.com/youtube/v3/", **kw)
-        self.key = api_key
+        self.client.headers["X-goog-api-key"] = api_key
 
     def search(
         self,
@@ -109,7 +115,6 @@ class YouTubeClient(JSONClient):
         if not query.strip() or not 1 <= page_size <= 50:
             raise ValueError("Query and page size 1..50 required")
         params = {
-            "key": self.key,
             "part": "snippet",
             "type": "video",
             "q": query,
@@ -126,7 +131,7 @@ class YouTubeClient(JSONClient):
         return Page(data, data.get("nextPageToken"))
 
     def uploads_playlist(self, channel_id: str) -> str:
-        data = self.get("channels", {"key": self.key, "part": "contentDetails", "id": channel_id})
+        data = self.get("channels", {"part": "contentDetails", "id": channel_id})
         try:
             return data["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
         except (KeyError, IndexError, TypeError):
@@ -134,7 +139,6 @@ class YouTubeClient(JSONClient):
 
     def playlist(self, playlist_id: str, *, cursor: str | None = None) -> Page:
         p = {
-            "key": self.key,
             "part": "snippet,contentDetails",
             "playlistId": playlist_id,
             "maxResults": 50,
@@ -150,7 +154,7 @@ class YouTubeClient(JSONClient):
         return Page(
             self.get(
                 "videos",
-                {"key": self.key, "part": "snippet,contentDetails,status", "id": ",".join(ids)},
+                {"part": "snippet,contentDetails,status", "id": ",".join(ids)},
             ),
             None,
         )
@@ -161,14 +165,14 @@ class FactCheckClient(JSONClient):
         if not api_key:
             raise ValueError("FACTCHECK_API_KEY is required")
         super().__init__("https://factchecktools.googleapis.com/v1alpha1/", **kw)
-        self.key = api_key
+        self.client.headers["X-goog-api-key"] = api_key
 
     def search(
         self, query: str, *, cursor: str | None = None, page_size: int = 20, language: str = "en"
     ) -> Page:
         if not query.strip() or not 1 <= page_size <= 100:
             raise ValueError("Query and bounded page size required")
-        p = {"key": self.key, "query": query, "languageCode": language, "pageSize": page_size}
+        p = {"query": query, "languageCode": language, "pageSize": page_size}
         if cursor:
             p["pageToken"] = cursor
         d = self.get("./claims:search", p)

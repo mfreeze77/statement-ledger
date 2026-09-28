@@ -7,6 +7,7 @@ import time
 import uuid
 from typing import Any
 
+from statement_ledger.contracts.identity import job_content
 from statement_ledger.contracts.runtime import JobRequest
 from statement_ledger.core.errors import Missing
 from statement_ledger.core.util import canonical_json, digest
@@ -16,18 +17,72 @@ class LeaseLost(RuntimeError):
     pass
 
 
+class JobRequiresRequeue(RuntimeError):
+    def __init__(self, report: dict[str, Any]):
+        self.report = report
+        super().__init__("Existing terminal job requires explicit requeue: " + report["job_id"])
+
+
 class RuntimeQueue:
     def __init__(self, store: Any):
         self.store = store
 
     @staticmethod
     def identity(request: JobRequest) -> str:
-        payload = request.model_dump(mode="json", exclude={"run_id"})
-        return "job-" + digest(payload)
+        return "job-" + digest(job_content(request))
+
+    @staticmethod
+    def legacy_identity(request: JobRequest) -> str:
+        return "job-" + digest(request.model_dump(mode="json", exclude={"run_id"}))
+
+    def _existing(self, request: JobRequest) -> dict[str, Any] | None:
+        # Preserve already-issued job IDs, references and audit history on upgrade.
+        identity = self.identity(request)
+        rows = self.store.db.execute(
+            "SELECT id,payload,state FROM work_jobs WHERE json_extract(payload,'$.handler')=?",
+            (request.handler,),
+        ).fetchall()
+        for row in rows:
+            if self.identity(JobRequest.model_validate_json(row["payload"])) == identity:
+                return dict(row)
+        return None
 
     def submit(self, request: JobRequest) -> str:
+        report = self.submit_with_status(request)
+        if report["requeue_required"]:
+            raise JobRequiresRequeue(report)
+        return str(report["job_id"])
+
+    def submit_with_status(self, request: JobRequest) -> dict[str, Any]:
         job_id = self.identity(request)
         with self.store.transaction():
+            existing = self._existing(request)
+            if existing is not None:
+                self.store.audit(
+                    {
+                        "type": "work.submission_reused",
+                        "job_id": existing["id"],
+                        "state": existing["state"],
+                        "run_id": request.run_id,
+                    }
+                )
+                return {
+                    "job_id": existing["id"],
+                    "state": existing["state"],
+                    "reused": True,
+                    "requeue_required": existing["state"] in {"failed", "blocked", "cancelled"},
+                }
+            for row in self.store.db.execute(
+                "SELECT event FROM outbox WHERE state='pending' AND json_extract(event,'$.type')='work.requested'"
+            ).fetchall():
+                event = json.loads(row["event"])
+                if self.identity(JobRequest.model_validate(event["request"])) == job_id:
+                    return {
+                        "job_id": event["job_id"],
+                        "state": "outbox_pending",
+                        "reused": True,
+                        "requeue_required": False,
+                    }
             for artifact in request.artifacts.values():
                 row = self.store.db.execute(
                     "SELECT sha256,size FROM artifact_refs WHERE key=?", (artifact.key,)
@@ -51,10 +106,18 @@ class RuntimeQueue:
                     "handler": request.handler,
                 }
             )
-        return job_id
+        return {
+            "job_id": job_id,
+            "state": "outbox_pending",
+            "reused": False,
+            "requeue_required": False,
+        }
 
-    def _insert_job(self, request: JobRequest) -> str:
-        job_id = self.identity(request)
+    def _insert_job(self, request: JobRequest, requested_id: str | None = None) -> str:
+        existing = self._existing(request)
+        if existing is not None:
+            return str(existing["id"])
+        job_id = requested_id or self.identity(request)
         payload = canonical_json(request.model_dump(mode="json"))
         self.store.db.execute(
             """INSERT OR IGNORE INTO work_jobs
@@ -87,9 +150,9 @@ class RuntimeQueue:
                 if event.get("type") == "work.requested":
                     request = JobRequest.model_validate(event["request"])
                     job_id = self.identity(request)
-                    if event.get("job_id") != job_id:
+                    if event.get("job_id") not in {job_id, self.legacy_identity(request)}:
                         raise ValueError("Outbox job identity mismatch")
-                    self._insert_job(request)
+                    self._insert_job(request, event["job_id"])
                     state = "dispatched"
                     dispatched += 1
                 else:
@@ -237,9 +300,9 @@ class RuntimeQueue:
                 if pending is None:
                     raise Missing("work_job:" + job_id)
                 request = JobRequest.model_validate(json.loads(pending["event"])["request"])
-                if self.identity(request) != job_id:
+                if job_id not in {self.identity(request), self.legacy_identity(request)}:
                     raise ValueError("Pending job identity mismatch")
-                self._insert_job(request)
+                self._insert_job(request, job_id)
                 self.store.db.execute(
                     "UPDATE outbox SET state='dispatched' WHERE sequence=?", (pending["sequence"],)
                 )
@@ -255,6 +318,36 @@ class RuntimeQueue:
                 (time.time(), job_id),
             )
             self.store.audit({"type": "work.cancelled", "job_id": job_id})
+
+    def requeue(self, job_id: str, *, reason: str, additional_attempts: int = 1) -> dict[str, Any]:
+        if (
+            not reason.strip()
+            or len(reason) > 2000
+            or type(additional_attempts) is not int
+            or not 1 <= additional_attempts <= 10
+        ):
+            raise ValueError("Requeue requires a reason and 1..10 additional attempts")
+        with self.store.transaction():
+            row = self.get(job_id)
+            if row["state"] not in {"failed", "blocked", "cancelled"}:
+                raise ValueError(
+                    "Only failed, blocked or cancelled jobs may be explicitly requeued"
+                )
+            # Retain every attempt ordinal. Requeue grants a new, bounded retry budget.
+            self.store.db.execute(
+                "UPDATE work_jobs SET state='pending',available=?,max_attempts=?,cancel_requested=0,error_code=NULL,lease_token=NULL,lease_until=NULL WHERE id=?",
+                (time.time(), row["attempts"] + additional_attempts, job_id),
+            )
+            self.store.audit(
+                {
+                    "type": "work.requeued",
+                    "job_id": job_id,
+                    "previous_state": row["state"],
+                    "reason": reason,
+                    "additional_attempts": additional_attempts,
+                }
+            )
+            return self.get(job_id)
 
     def get(self, job_id: str) -> dict[str, Any]:
         row = self.store.db.execute("SELECT * FROM work_jobs WHERE id=?", (job_id,)).fetchone()
