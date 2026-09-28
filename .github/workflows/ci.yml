@@ -60,6 +60,25 @@ jobs:
           persist-credentials: false
       - name: Scan history with pinned Gitleaks
         run: |
-          docker run --rm -v "$PWD:/repo:ro" zricethezav/gitleaks:v8.24.2@sha256:b5918eb91b8d2473cec722f066abb4352e4ffdc4ec9f4283ec143aba9ec9ebc4 git /repo --redact --config /repo/.gitleaks.toml
+          mkdir -p /tmp/sl-secret-report
+          set +e
+          docker run --rm -v "$PWD:/repo:ro" -v /tmp/sl-secret-report:/report zricethezav/gitleaks:v8.24.2@sha256:b5918eb91b8d2473cec722f066abb4352e4ffdc4ec9f4283ec143aba9ec9ebc4 git /repo --redact --config /repo/.gitleaks.toml --report-format json --report-path /report/gitleaks.json
+          status=$?
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('/tmp/sl-secret-report/gitleaks.json')
+          if path.exists():
+              for finding in json.loads(path.read_text()):
+                  print(json.dumps({key: finding.get(key) for key in ('File', 'StartLine', 'RuleID', 'Fingerprint')}))
+          PY
+          exit "$status"
       - name: Prove synthetic credential detection
+        if: always()
         run: python scripts/secret-scan-proof.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: foundation-redacted-secret-report
+          path: /tmp/sl-secret-report/gitleaks.json
+          retention-days: 3
