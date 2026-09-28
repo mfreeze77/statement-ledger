@@ -1,0 +1,21 @@
+name: Temporary offline editor tools
+on:
+  push:
+    branches: [assistant/phase0-foundation]
+    paths: [.github/workflows/editor-tools.yml]
+permissions:
+  contents: read
+jobs:
+  tools:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip download --only-binary=:all: --dest /tmp/sl-editor-tools ruff==0.14.10 mypy==1.19.1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sl-editor-tools
+          path: /tmp/sl-editor-tools
+          retention-days: 1

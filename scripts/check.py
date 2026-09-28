@@ -27,7 +27,7 @@ def main() -> int:
         if args.action == "check":
             run("uv", "lock", "--check", "--offline")
             run("ruff", "check", ".")
-            run("ruff", "format", "--check", ".")
+            run("ruff", "format", "--check", "--diff", ".")
             run("mypy")
             run(python, "scripts/check-boundaries.py")
             run(python, "scripts/generate-environment.py", "--check")
