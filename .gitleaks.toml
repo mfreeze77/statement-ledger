@@ -1,0 +1,5 @@
+title = "Statement Ledger secret scanning"
+[extend]
+useDefault = true
+# Never allowlist whole source trees or provider captures. Synthetic tests construct
+# markers in memory and scan a temporary directory; no credential is checked in.

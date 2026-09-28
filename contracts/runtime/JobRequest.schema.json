@@ -1,0 +1,139 @@
+{
+  "$defs": {
+    "ArtifactInput": {
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "pattern": "^sha256/[a-f0-9]{2}/[a-f0-9]{64}$",
+          "title": "Key",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size": {
+          "minimum": 0,
+          "title": "Size",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "key",
+        "sha256",
+        "size"
+      ],
+      "title": "ArtifactInput",
+      "type": "object"
+    },
+    "Binding": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 180,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Kind",
+          "type": "string"
+        },
+        "record_hash": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Record Hash",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "revision",
+        "record_hash"
+      ],
+      "title": "Binding",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ArtifactInput"
+      },
+      "maxProperties": 100,
+      "title": "Artifacts",
+      "type": "object"
+    },
+    "capability": {
+      "default": "cpu",
+      "enum": [
+        "cpu",
+        "gpu"
+      ],
+      "title": "Capability",
+      "type": "string"
+    },
+    "config_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Config Sha256",
+      "type": "string"
+    },
+    "contract_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Contract Version",
+      "type": "integer"
+    },
+    "handler": {
+      "pattern": "^[a-z][a-z0-9_.]{1,99}$",
+      "title": "Handler",
+      "type": "string"
+    },
+    "handler_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Handler Version",
+      "type": "integer"
+    },
+    "inputs": {
+      "items": {
+        "$ref": "#/$defs/Binding"
+      },
+      "maxItems": 10000,
+      "title": "Inputs",
+      "type": "array"
+    },
+    "max_attempts": {
+      "default": 3,
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Max Attempts",
+      "type": "integer"
+    },
+    "parameters": {
+      "additionalProperties": true,
+      "title": "Parameters",
+      "type": "object"
+    },
+    "run_id": {
+      "pattern": "^[a-zA-Z0-9_.:-]{1,180}$",
+      "title": "Run Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "handler",
+    "config_sha256"
+  ],
+  "title": "JobRequest",
+  "type": "object"
+}

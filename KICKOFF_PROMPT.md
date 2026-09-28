@@ -1,3 +1,10 @@
+# Current agent entrypoint
+
+Work from current main/PR state, not an old downloadable bundle. Read AGENTS.md and
+`docs/runbooks/FOUNDATION.md` first. Run the locked baseline checks. Keep one module owner
+per task and preserve schemas, hashes, immediate invalidation, rights and worker fences.
+The product scope is unchanged; do not add more sources or product-spec chapters as setup.
+
 # v0.2 next developer / coding-agent kickoff
 
 Work only in this standalone repository. Read AGENTS.md, feature-status.json,

@@ -1,4 +1,4 @@
-# Statement Ledger 0.2.0
+# Statement Ledger 0.3.0 — Foundation
 
 **A standalone, source-bound public-statement ledger with reusable research and transcript-first speaker localization.**
 
@@ -21,7 +21,9 @@ provider is required. The base application and all demonstrations run without mo
 | Need | Read |
 |---|---|
 | Complete original and expanded design, 29 chapters | [SPECIFICATION.md](SPECIFICATION.md) |
-| What changed and what was corrected | [Release notes](docs/RELEASE_NOTES_V0_2.md) |
+| Foundation commands, configuration, migrations and jobs | [Operating guide](docs/runbooks/FOUNDATION.md) |
+| Phase 0 implementation and validation | [Status](docs/PHASE0_STATUS.md), [evidence](docs/PHASE0_VALIDATION.md) |
+| Earlier acceleration changes | [v0.2 release notes](docs/RELEASE_NOTES_V0_2.md) |
 | Existing database or v0.1 checkout | [Upgrade runbook](docs/runbooks/UPGRADE_V0_2.md) |
 | Tested implementation versus remaining work | [Implementation status](docs/IMPLEMENTATION_STATUS.md) |
 | Executed checks and limitations | [Validation report](docs/VALIDATION_REPORT.md) |
@@ -31,7 +33,7 @@ provider is required. The base application and all demonstrations run without mo
 
 ## What is runnable
 
-The v0.1 ledger and source adapters are retained. This release adds:
+The statement-ledger and acceleration features are retained. The foundation release adds explicit migrations, a fenced worker, typed settings/secrets, immutable artifacts, locked environments and modular ownership; it does not automatically connect new sources. Existing product capabilities include:
 
 - **Independent shared claims:** SQLite FTS5 search, topical families, source-bound bulk
   JSONL/gzip/bzip2 seed import, and exact-proposition review cards with scope, expiry,
@@ -63,39 +65,29 @@ access/onboarding worksheets. They are not all live connections.
 
 ## Local quick start
 
-Python 3.11+ is required; this release was executed on Python 3.13. Use a virtual environment.
-Installing dependencies needs package access or an already provisioned wheelhouse.
-
-**Bash**
+Use Docker Compose for the shared development/test environment. No source/model credential is needed for tests.
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install -e '.[test]'
-python -m pytest -q
-statement-ledger --db data/demo-v02.sqlite3 demo-acceleration
-export SL_API_TOKEN="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
-statement-ledger --db data/demo-v02.sqlite3 serve --host 127.0.0.1 --port 8765
+make up
+make check
+make proof
+make doctor
+make down
 ```
 
-**PowerShell**
+On Windows, use `./scripts/dev.ps1 up` and `./scripts/dev.ps1 check`. The command runner creates a private ignored local operator token when needed; the API binds only to localhost. Source files are mounted directly; package environments are not shared with the host. Down never deletes data volumes.
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -e ".[test]"
-python -m pytest -q
-statement-ledger --db data/demo-v02.sqlite3 demo-acceleration
-$env:SL_API_TOKEN = python -c "import secrets; print(secrets.token_urlsafe(32))"
-statement-ledger --db data/demo-v02.sqlite3 serve --host 127.0.0.1 --port 8765
+Read **[the foundation operating guide](docs/runbooks/FOUNDATION.md)** before using an existing database. Startup does not create or upgrade a schema. `statement-ledger migrate` is explicit; an old default database is detected rather than replaced with an empty one. Numbered migrations preserve prior record hashes and audit history.
+
+For native Python 3.11–3.13 work:
+
+```bash
+uv sync --locked --group dev
+uv run --locked python scripts/check.py check
+uv run --locked statement-ledger --db data/demo-v02.sqlite3 demo-acceleration
 ```
 
-Open `http://127.0.0.1:8765/` and enter the same token in the interface. Do not publish the
-local port or commit a token. The demo requires an empty database and uses only fictional
-people and statements; it does not conduct a real-person investigation.
-
-The original demonstration remains available as `statement-ledger --db data/old-demo.sqlite3 demo`.
-Use different empty paths for different fixtures. Stop the server with Ctrl+C.
+The demo is explicitly synthetic and creates its own empty database. It never runs a real-person investigation. Existing synchronous operator commands remain available; the new worker runs versioned jobs with exact input bindings and separate publication checks.
 
 ## Try the new workflows
 
@@ -120,7 +112,7 @@ the demo's URLs are deliberately not downloadable recordings.
 
 ## Enable Jev deliberately
 
-Jev is **off by default**. The adapter uses the official TypeSafe endpoint, not a separate
+Jev is **off by default**. The runtime also requires an explicit positive estimate and budget (`SL_REMOTE_ESTIMATE_MICRO_USD`, `SL_REMOTE_BUDGET_MICRO_USD`) before calls; unknown charges block automatic replay. See the foundation operating guide. The adapter uses the official TypeSafe endpoint, not a separate
 Jev-branded service linked from a community article. Read
 [the Jev contract chapter](docs/spec/26_JEV_TYPED_DECISION_BOUNDARY.md).
 

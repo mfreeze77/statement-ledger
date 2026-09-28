@@ -1,0 +1,15 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "request": {
+      "additionalProperties": true,
+      "title": "Request",
+      "type": "object"
+    }
+  },
+  "required": [
+    "request"
+  ],
+  "title": "JevDecision",
+  "type": "object"
+}

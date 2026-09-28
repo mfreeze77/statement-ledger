@@ -1,6 +1,6 @@
 {
-  "version": "0.2.0",
-  "as_of": "2026-09-27",
+  "version": "0.3.0",
+  "as_of": "2026-09-28",
   "features": [
     {
       "id": "SL-C01",
@@ -118,8 +118,8 @@
       "id": "SL-C17",
       "capability": "Durable job leases",
       "status": "implemented_local_tested",
-      "evidence": "jobs.py; test_jobs.py",
-      "boundary": "Queue primitives tested. No fully connected worker/scheduler/outbox consumer."
+      "evidence": "infrastructure/queue.py; infrastructure/worker.py; application/handlers.py",
+      "boundary": "Connected same-DB worker/outbox, leases, heartbeats, cancellation and fenced results. Explicit handlers only; no autonomous scheduler."
     },
     {
       "id": "SL-C18",
@@ -145,9 +145,9 @@
     {
       "id": "SL-C21",
       "capability": "Production database and deployment",
-      "status": "specified_not_implemented",
-      "evidence": "docs/spec/11_ARCHITECTURE_AND_STORAGE.md",
-      "boundary": "SQLite core only. Migration, role-based multi-user auth, external object storage and production rollout pending."
+      "status": "partly_implemented",
+      "evidence": "Dockerfile; compose.yaml; infrastructure/migrations/; docs/runbooks/FOUNDATION.md",
+      "boundary": "Single-owner local SQLite environments/migrations delivered. Multi-user SaaS, PostgreSQL and production rollout are not implemented."
     },
     {
       "id": "SL-C22",
@@ -159,9 +159,9 @@
     {
       "id": "SL-C23",
       "capability": "Remote GitHub repository",
-      "status": "not_created",
-      "evidence": "scripts/publish-github.*",
-      "boundary": "Separate local Git history and publishing helpers; no connected create-repository action."
+      "status": "created_and_baseline_ci_verified",
+      "evidence": "mfreeze77/statement-ledger main ffcb18b; GitHub Actions baseline run 36360621237",
+      "boundary": "Phase 0 edits are proposed in a branch/PR; original main history is preserved."
     },
     {
       "id": "SL-C24",
@@ -237,8 +237,8 @@
       "id": "SL-C34",
       "capability": "Additive v0.1 database upgrade",
       "status": "implemented_local_tested",
-      "evidence": "store.py; tests/test_acceleration_interfaces.py",
-      "boundary": "Adds index/receipts without rewriting original hashes; use native backup before upgrade."
+      "evidence": "infrastructure/migrations/; tests/test_foundation.py",
+      "boundary": "Numbered checksummed legacy adoption; no historical payload/hash rewrite; native backup and explicit runtime migration required."
     }
   ],
   "specification_version": "1.1"
