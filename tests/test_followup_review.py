@@ -54,7 +54,7 @@ def historical_operation(case, *, operation_id="job-legacy", body=None, metadata
     )
     if metadata_change:
         metadata.update(metadata_change)
-    receipt_id = ledger.store.capture_provider_response(key, 1, 200, raw, False, metadata)
+    receipt_id = journal.capture_receipt(operation_id, key, 1, 200, raw, False, metadata)
     journal.unknown(operation_id)
     journal.reconcile(operation_id, actual_micro_usd=7, evidence="Fictional billing evidence")
     return journal, operation_id, key, receipt_id
@@ -127,7 +127,7 @@ def test_owner_recovers_retained_receipt_then_worker_reuses_without_payment(remo
         "metadata",
         "status",
         "truncated",
-        "old_time",
+        "future_time",
         "wrong_receipt_ids",
         "stale_input",
     ],
@@ -160,10 +160,10 @@ def test_receipt_recovery_rejects_invalid_or_inapplicable_evidence(remote_case, 
         )
     elif invalid == "truncated":
         ledger.store.db.execute("UPDATE provider_receipts SET truncated=1 WHERE id=?", (receipt,))
-    elif invalid == "old_time":
+    elif invalid == "future_time":
         ledger.store.db.execute(
             "UPDATE provider_receipts SET captured_at=? WHERE id=?",
-            ((now() - timedelta(days=2)).isoformat(), receipt),
+            ((now() + timedelta(days=2)).isoformat(), receipt),
         )
     elif invalid == "wrong_receipt_ids":
         ledger.store.db.execute(
@@ -279,7 +279,12 @@ def test_retry_authorization_fails_closed(remote_case, condition):
     else:
         journal.authorize_retry(operation, actor="local-owner", reason="Fictional single attempt")
         if condition == "history":
-            journal.reconcile(operation, actual_micro_usd=8, evidence="Corrected billing")
+            # Simulate an out-of-band history edit. Reconciliation may no longer
+            # mutate a completed operation merely to invalidate a grant.
+            ledger.store.db.execute(
+                "UPDATE provider_operations SET usage=? WHERE id=?",
+                (json.dumps({"fixture_history_changed": True}), operation),
+            )
         with pytest.raises(OperationBlocked):
             journal.begin(
                 "new",

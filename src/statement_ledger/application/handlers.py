@@ -207,7 +207,8 @@ def prepare_jev(context: WorkContext, job: JobRequest) -> PreparedResult:
     try:
 
         def capture(attempt: int, status: int | None, body: bytes, truncated: bool) -> str:
-            return context.capture_response(
+            return journal.capture_receipt(
+                operation_id,
                 key,
                 attempt,
                 status,

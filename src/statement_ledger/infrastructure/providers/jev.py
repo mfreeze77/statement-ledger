@@ -368,18 +368,20 @@ def run_decision(ledger, request, client, *, actor="local-operator"):
                 }
 
     def capture(attempt, status, body, truncated):
+        metadata = {
+            **request,
+            "endpoint": ENDPOINT,
+            "model": client.config.model,
+            "validator": VALIDATOR_VERSION,
+        }
+        if journal is not None:
+            return journal.capture_receipt(
+                operation, key, attempt, status, body, truncated, metadata
+            )
+        # Unaccounted direct calls have no operation; their receipts cannot be recovered
+        # into another operation merely because the semantic request happens to match.
         return ledger.store.capture_provider_response(
-            key,
-            attempt,
-            status,
-            body,
-            truncated,
-            {
-                **request,
-                "endpoint": ENDPOINT,
-                "model": client.config.model,
-                "validator": VALIDATOR_VERSION,
-            },
+            key, attempt, status, body, truncated, metadata
         )
 
     operation = "jev-" + uuid.uuid4().hex
