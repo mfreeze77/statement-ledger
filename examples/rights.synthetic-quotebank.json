@@ -1,0 +1,9 @@
+{
+  "id": "fixture-quotebank-rights",
+  "source_id": "quotebank",
+  "basis": "ONLY the generated synthetic fixture in this repository. Not a grant for the real Quotebank corpus.",
+  "allowed": [
+    "store_text"
+  ],
+  "reviewed_by": "synthetic-fixture"
+}

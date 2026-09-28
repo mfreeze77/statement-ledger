@@ -1,0 +1,180 @@
+{
+  "$defs": {
+    "RecordRef": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 180,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "maxLength": 180,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "revision"
+      ],
+      "title": "RecordRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "answers": {
+      "additionalProperties": true,
+      "title": "Answers",
+      "type": "object"
+    },
+    "bindings": {
+      "items": {
+        "$ref": "#/$defs/RecordRef"
+      },
+      "minItems": 1,
+      "title": "Bindings",
+      "type": "array"
+    },
+    "captured_at": {
+      "format": "date-time",
+      "title": "Captured At",
+      "type": "string"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error Code"
+    },
+    "id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "input_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Input Ids",
+      "type": "array"
+    },
+    "latency_ms": {
+      "minimum": 0,
+      "title": "Latency Ms",
+      "type": "number"
+    },
+    "model_requested": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "title": "Model Requested",
+      "type": "string"
+    },
+    "model_resolved": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model Resolved"
+    },
+    "purpose": {
+      "enum": [
+        "speaker_localization",
+        "claim_matching"
+      ],
+      "title": "Purpose",
+      "type": "string"
+    },
+    "question_version": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "title": "Question Version",
+      "type": "string"
+    },
+    "questions": {
+      "additionalProperties": true,
+      "title": "Questions",
+      "type": "object"
+    },
+    "receipt_ids": {
+      "items": {
+        "maxLength": 180,
+        "minLength": 1,
+        "pattern": "^[a-zA-Z0-9_.:-]+$",
+        "type": "string"
+      },
+      "title": "Receipt Ids",
+      "type": "array"
+    },
+    "request_hash": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Request Hash",
+      "type": "string"
+    },
+    "state_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "State Sha256",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "available",
+        "unavailable"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "usage": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Usage",
+      "type": "object"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "purpose",
+    "request_hash",
+    "model_requested",
+    "question_version",
+    "questions",
+    "bindings",
+    "state_sha256",
+    "status",
+    "latency_ms",
+    "captured_at"
+  ],
+  "title": "DecisionRun",
+  "type": "object"
+}

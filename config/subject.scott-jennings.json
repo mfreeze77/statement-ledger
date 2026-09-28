@@ -1,0 +1,20 @@
+{
+  "person": {
+    "id": "scott-jennings",
+    "display_name": "Scott Jennings",
+    "aliases": [],
+    "identity_urls": [],
+    "synthetic": false
+  },
+  "purpose": "Discovery-only configuration. No appearances, statements, affiliations, or findings are asserted.",
+  "date_window": {
+    "start": null,
+    "end": null
+  },
+  "automatic_execution": false,
+  "max_pages_per_explicit_run": 1,
+  "max_acquisition_bytes": 0,
+  "provider_spend_authorized": false,
+  "identity_review_required": true,
+  "publication_enabled": false
+}

@@ -1,0 +1,21 @@
+name: statement-ledger
+services:
+  ledger:
+    build: .
+    environment:
+      SL_API_TOKEN: ${SL_API_TOKEN:?Generate SL_API_TOKEN before starting}
+      SL_DB_PATH: /data/ledger.sqlite3
+    ports:
+      - "127.0.0.1:8765:8765"
+    volumes:
+      - statement-ledger-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+volumes:
+  statement-ledger-data:

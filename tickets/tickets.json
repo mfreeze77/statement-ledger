@@ -1,0 +1,1169 @@
+[
+  {
+    "id": "SL-001",
+    "title": "Establish the independent local reference",
+    "status": "verified_local_reference",
+    "gate": "G1",
+    "dependencies": [],
+    "path": "tickets/SL-001-establish-the-independent-local-reference.md"
+  },
+  {
+    "id": "SL-002",
+    "title": "Resolve a reproducible dependency and model environment",
+    "status": "proposed",
+    "gate": "G1",
+    "dependencies": [
+      "SL-001"
+    ],
+    "path": "tickets/SL-002-resolve-a-reproducible-dependency-and-model-environment.md"
+  },
+  {
+    "id": "SL-003",
+    "title": "Unify discovery receipts with provenance and coverage",
+    "status": "proposed",
+    "gate": "G2",
+    "dependencies": [
+      "SL-001"
+    ],
+    "path": "tickets/SL-003-unify-discovery-receipts-with-provenance-and-coverage.md"
+  },
+  {
+    "id": "SL-004",
+    "title": "Capture real connector contracts and drift quarantine",
+    "status": "proposed",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003"
+    ],
+    "path": "tickets/SL-004-capture-real-connector-contracts-and-drift-quarantine.md"
+  },
+  {
+    "id": "SL-005",
+    "title": "Constrain media acquisition and external-model egress",
+    "status": "proposed",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003"
+    ],
+    "path": "tickets/SL-005-constrain-media-acquisition-and-external-model-egress.md"
+  },
+  {
+    "id": "SL-006",
+    "title": "Add asset-scoped rights and retention inheritance",
+    "status": "proposed",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003"
+    ],
+    "path": "tickets/SL-006-add-asset-scoped-rights-and-retention-inheritance.md"
+  },
+  {
+    "id": "SL-007",
+    "title": "Support bounded large JSON arrays and resumable corpora",
+    "status": "proposed",
+    "gate": "G2",
+    "dependencies": [
+      "SL-004"
+    ],
+    "path": "tickets/SL-007-support-bounded-large-json-arrays-and-resumable-corpora.md"
+  },
+  {
+    "id": "SL-008",
+    "title": "Resolve original events and near-duplicate assets",
+    "status": "proposed",
+    "gate": "G4",
+    "dependencies": [
+      "SL-004"
+    ],
+    "path": "tickets/SL-008-resolve-original-events-and-near-duplicate-assets.md"
+  },
+  {
+    "id": "SL-009",
+    "title": "Implement piecewise timeline alignment and occurrence clusters",
+    "status": "proposed",
+    "gate": "G4",
+    "dependencies": [
+      "SL-008"
+    ],
+    "path": "tickets/SL-009-implement-piecewise-timeline-alignment-and-occurrence-clusters.md"
+  },
+  {
+    "id": "SL-010",
+    "title": "Execute and benchmark the speech worker",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-002",
+      "SL-005"
+    ],
+    "path": "tickets/SL-010-execute-and-benchmark-the-speech-worker.md"
+  },
+  {
+    "id": "SL-011",
+    "title": "Calibrate speaker identity proposals",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-010"
+    ],
+    "path": "tickets/SL-011-calibrate-speaker-identity-proposals.md"
+  },
+  {
+    "id": "SL-012",
+    "title": "Build the transcript and context review workspace",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-010",
+      "SL-011"
+    ],
+    "path": "tickets/SL-012-build-the-transcript-and-context-review-workspace.md"
+  },
+  {
+    "id": "SL-013",
+    "title": "Add constrained candidate claim extraction",
+    "status": "proposed",
+    "gate": "G5",
+    "dependencies": [
+      "SL-012"
+    ],
+    "path": "tickets/SL-013-add-constrained-candidate-claim-extraction.md"
+  },
+  {
+    "id": "SL-014",
+    "title": "Retrieve primary evidence with reproducible snapshots",
+    "status": "proposed",
+    "gate": "G5",
+    "dependencies": [
+      "SL-005",
+      "SL-013"
+    ],
+    "path": "tickets/SL-014-retrieve-primary-evidence-with-reproducible-snapshots.md"
+  },
+  {
+    "id": "SL-015",
+    "title": "Extend scope compatibility and review controls",
+    "status": "proposed",
+    "gate": "G5",
+    "dependencies": [
+      "SL-014"
+    ],
+    "path": "tickets/SL-015-extend-scope-compatibility-and-review-controls.md"
+  },
+  {
+    "id": "SL-016",
+    "title": "Implement correction resolution and re-review tasks",
+    "status": "proposed",
+    "gate": "G5",
+    "dependencies": [
+      "SL-015"
+    ],
+    "path": "tickets/SL-016-implement-correction-resolution-and-re-review-tasks.md"
+  },
+  {
+    "id": "SL-017",
+    "title": "Version ledger snapshots and counting policies",
+    "status": "proposed",
+    "gate": "G4",
+    "dependencies": [
+      "SL-009",
+      "SL-016"
+    ],
+    "path": "tickets/SL-017-version-ledger-snapshots-and-counting-policies.md"
+  },
+  {
+    "id": "SL-018",
+    "title": "Reconcile discovery coverage and source gaps",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-003",
+      "SL-004"
+    ],
+    "path": "tickets/SL-018-reconcile-discovery-coverage-and-source-gaps.md"
+  },
+  {
+    "id": "SL-019",
+    "title": "Connect transactional outbox and bounded workers",
+    "status": "proposed",
+    "gate": "G6",
+    "dependencies": [
+      "SL-003",
+      "SL-010"
+    ],
+    "path": "tickets/SL-019-connect-transactional-outbox-and-bounded-workers.md"
+  },
+  {
+    "id": "SL-020",
+    "title": "Enforce collection and model budgets",
+    "status": "proposed",
+    "gate": "G6",
+    "dependencies": [
+      "SL-019"
+    ],
+    "path": "tickets/SL-020-enforce-collection-and-model-budgets.md"
+  },
+  {
+    "id": "SL-021",
+    "title": "Migrate canonical storage for multi-worker operation",
+    "status": "proposed",
+    "gate": "G6",
+    "dependencies": [
+      "SL-017",
+      "SL-019"
+    ],
+    "path": "tickets/SL-021-migrate-canonical-storage-for-multi-worker-operation.md"
+  },
+  {
+    "id": "SL-022",
+    "title": "Add content-addressed object storage and manifests",
+    "status": "proposed",
+    "gate": "G6",
+    "dependencies": [
+      "SL-006",
+      "SL-019"
+    ],
+    "path": "tickets/SL-022-add-content-addressed-object-storage-and-manifests.md"
+  },
+  {
+    "id": "SL-023",
+    "title": "Introduce production identities and authorization",
+    "status": "proposed",
+    "gate": "G6",
+    "dependencies": [
+      "SL-021"
+    ],
+    "path": "tickets/SL-023-introduce-production-identities-and-authorization.md"
+  },
+  {
+    "id": "SL-024",
+    "title": "Provide opt-in change notifications",
+    "status": "proposed",
+    "gate": "G6",
+    "dependencies": [
+      "SL-017",
+      "SL-019",
+      "SL-023"
+    ],
+    "path": "tickets/SL-024-provide-opt-in-change-notifications.md"
+  },
+  {
+    "id": "SL-025",
+    "title": "Gate private exports and any future publication",
+    "status": "blocked",
+    "gate": "G7",
+    "dependencies": [
+      "SL-016",
+      "SL-017",
+      "SL-023",
+      "SL-026"
+    ],
+    "path": "tickets/SL-025-gate-private-exports-and-any-future-publication.md"
+  },
+  {
+    "id": "SL-026",
+    "title": "Propagate expiry, deletion and redaction",
+    "status": "proposed",
+    "gate": "G6",
+    "dependencies": [
+      "SL-006",
+      "SL-022"
+    ],
+    "path": "tickets/SL-026-propagate-expiry,-deletion-and-redaction.md"
+  },
+  {
+    "id": "SL-027",
+    "title": "Build a held-out real-media evaluation corpus",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-010",
+      "SL-011",
+      "SL-018"
+    ],
+    "path": "tickets/SL-027-build-a-held-out-real-media-evaluation-corpus.md"
+  },
+  {
+    "id": "SL-028",
+    "title": "Measure workload limits and recovery behavior",
+    "status": "proposed",
+    "gate": "G6",
+    "dependencies": [
+      "SL-019",
+      "SL-021",
+      "SL-022"
+    ],
+    "path": "tickets/SL-028-measure-workload-limits-and-recovery-behavior.md"
+  },
+  {
+    "id": "SL-029",
+    "title": "Add operational observability without source leakage",
+    "status": "proposed",
+    "gate": "G6",
+    "dependencies": [
+      "SL-019"
+    ],
+    "path": "tickets/SL-029-add-operational-observability-without-source-leakage.md"
+  },
+  {
+    "id": "SL-030",
+    "title": "Harden packaging and release reproducibility",
+    "status": "proposed",
+    "gate": "G6",
+    "dependencies": [
+      "SL-002",
+      "SL-028"
+    ],
+    "path": "tickets/SL-030-harden-packaging-and-release-reproducibility.md"
+  },
+  {
+    "id": "SL-031",
+    "title": "Complete the first private person-centered investigation",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006",
+      "SL-010",
+      "SL-011",
+      "SL-018",
+      "SL-027"
+    ],
+    "path": "tickets/SL-031-complete-the-first-private-person-centered-investigation.md"
+  },
+  {
+    "id": "SL-101",
+    "title": "Onboard YouTube Data API",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-101-source-youtube.md",
+    "source_id": "youtube"
+  },
+  {
+    "id": "SL-102",
+    "title": "Onboard CNN program transcripts",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-102-source-cnn_transcripts.md",
+    "source_id": "cnn_transcripts"
+  },
+  {
+    "id": "SL-103",
+    "title": "Onboard CBS program transcripts",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-103-source-cbs_transcripts.md",
+    "source_id": "cbs_transcripts"
+  },
+  {
+    "id": "SL-104",
+    "title": "Onboard Internet Archive",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-104-source-internet_archive.md",
+    "source_id": "internet_archive"
+  },
+  {
+    "id": "SL-105",
+    "title": "Onboard GDELT Television Explorer",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-105-source-gdelt_tv.md",
+    "source_id": "gdelt_tv"
+  },
+  {
+    "id": "SL-106",
+    "title": "Onboard GDELT Visual Explorer",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-106-source-gdelt_visual.md",
+    "source_id": "gdelt_visual"
+  },
+  {
+    "id": "SL-107",
+    "title": "Onboard GDELT Television Ngrams",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-107-source-gdelt_tv_ngrams.md",
+    "source_id": "gdelt_tv_ngrams"
+  },
+  {
+    "id": "SL-108",
+    "title": "Onboard GDELT Global Quotation Graph",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-108-source-gdelt_gqg.md",
+    "source_id": "gdelt_gqg"
+  },
+  {
+    "id": "SL-109",
+    "title": "Onboard Quotebank",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-109-source-quotebank.md",
+    "source_id": "quotebank"
+  },
+  {
+    "id": "SL-110",
+    "title": "Onboard Media Cloud",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-110-source-media_cloud.md",
+    "source_id": "media_cloud"
+  },
+  {
+    "id": "SL-111",
+    "title": "Onboard LexisNexis / Nexis Uni",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-111-source-lexisnexis.md",
+    "source_id": "lexisnexis"
+  },
+  {
+    "id": "SL-112",
+    "title": "Onboard TVEyes",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-112-source-tveyes.md",
+    "source_id": "tveyes"
+  },
+  {
+    "id": "SL-113",
+    "title": "Onboard Critical Mention",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-113-source-critical_mention.md",
+    "source_id": "critical_mention"
+  },
+  {
+    "id": "SL-114",
+    "title": "Onboard Sprinklr",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-114-source-sprinklr.md",
+    "source_id": "sprinklr"
+  },
+  {
+    "id": "SL-115",
+    "title": "Onboard SnapStream",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-115-source-snapstream.md",
+    "source_id": "snapstream"
+  },
+  {
+    "id": "SL-116",
+    "title": "Onboard Grabien",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-116-source-grabien.md",
+    "source_id": "grabien"
+  },
+  {
+    "id": "SL-117",
+    "title": "Onboard American Archive of Public Broadcasting",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-117-source-aapb.md",
+    "source_id": "aapb"
+  },
+  {
+    "id": "SL-118",
+    "title": "Onboard C-SPAN Video Library",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-118-source-cspan.md",
+    "source_id": "cspan"
+  },
+  {
+    "id": "SL-119",
+    "title": "Onboard Vanderbilt Television News Archive",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-119-source-vanderbilt.md",
+    "source_id": "vanderbilt"
+  },
+  {
+    "id": "SL-120",
+    "title": "Onboard Google Fact Check Tools API",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-120-source-google_fact_check.md",
+    "source_id": "google_fact_check"
+  },
+  {
+    "id": "SL-121",
+    "title": "Onboard ClaimReview structured data",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-121-source-claimreview.md",
+    "source_id": "claimreview"
+  },
+  {
+    "id": "SL-122",
+    "title": "Onboard Fact-Check Insights",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-122-source-fact_check_insights.md",
+    "source_id": "fact_check_insights"
+  },
+  {
+    "id": "SL-123",
+    "title": "Onboard MediaVault / MediaReview",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-123-source-media_vault.md",
+    "source_id": "media_vault"
+  },
+  {
+    "id": "SL-124",
+    "title": "Onboard PolitiFact",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-124-source-politifact.md",
+    "source_id": "politifact"
+  },
+  {
+    "id": "SL-125",
+    "title": "Onboard PunditFact",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-125-source-punditfact.md",
+    "source_id": "punditfact"
+  },
+  {
+    "id": "SL-126",
+    "title": "Onboard FactCheck.org",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-126-source-factcheck_org.md",
+    "source_id": "factcheck_org"
+  },
+  {
+    "id": "SL-127",
+    "title": "Onboard Reuters Fact Check",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-127-source-reuters_fact_check.md",
+    "source_id": "reuters_fact_check"
+  },
+  {
+    "id": "SL-128",
+    "title": "Onboard AFP Fact Check",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-128-source-afp_fact_check.md",
+    "source_id": "afp_fact_check"
+  },
+  {
+    "id": "SL-129",
+    "title": "Onboard Media Matters for America",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-129-source-media_matters.md",
+    "source_id": "media_matters"
+  },
+  {
+    "id": "SL-130",
+    "title": "Onboard Media Research Center",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-130-source-mrc.md",
+    "source_id": "mrc"
+  },
+  {
+    "id": "SL-131",
+    "title": "Onboard NewsBusters",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-131-source-newsbusters.md",
+    "source_id": "newsbusters"
+  },
+  {
+    "id": "SL-132",
+    "title": "Onboard NewsGuard False Claim Fingerprints",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-132-source-newsguard.md",
+    "source_id": "newsguard"
+  },
+  {
+    "id": "SL-133",
+    "title": "Onboard Full Fact AI",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-133-source-full_fact_ai.md",
+    "source_id": "full_fact_ai"
+  },
+  {
+    "id": "SL-134",
+    "title": "Onboard Authorized manual input",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-134-source-manual_import.md",
+    "source_id": "manual_import"
+  },
+  {
+    "id": "SL-135",
+    "title": "Onboard Internet Archive TV News Archive",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-135-source-tv_news_archive.md",
+    "source_id": "tv_news_archive"
+  },
+  {
+    "id": "SL-136",
+    "title": "Onboard Subject-operated social media accounts",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-136-source-subject_social_accounts.md",
+    "source_id": "subject_social_accounts"
+  },
+  {
+    "id": "SL-137",
+    "title": "Onboard Subject-authored columns, op-eds and newsletters",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-137-source-subject_written_work.md",
+    "source_id": "subject_written_work"
+  },
+  {
+    "id": "SL-138",
+    "title": "Onboard Podcast feeds and radio programs",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006"
+    ],
+    "path": "tickets/SL-138-source-podcasts_radio.md",
+    "source_id": "podcasts_radio"
+  },
+  {
+    "id": "SL-139",
+    "title": "Onboard Congress.gov API",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006",
+      "SL-014"
+    ],
+    "path": "tickets/SL-139-source-congress_gov.md",
+    "source_id": "congress_gov"
+  },
+  {
+    "id": "SL-140",
+    "title": "Onboard GovInfo API",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006",
+      "SL-014"
+    ],
+    "path": "tickets/SL-140-source-govinfo.md",
+    "source_id": "govinfo"
+  },
+  {
+    "id": "SL-141",
+    "title": "Onboard Federal Register API",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006",
+      "SL-014"
+    ],
+    "path": "tickets/SL-141-source-federal_register.md",
+    "source_id": "federal_register"
+  },
+  {
+    "id": "SL-142",
+    "title": "Onboard Bureau of Labor Statistics Public Data API",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006",
+      "SL-014"
+    ],
+    "path": "tickets/SL-142-source-bls.md",
+    "source_id": "bls"
+  },
+  {
+    "id": "SL-143",
+    "title": "Onboard U.S. Census Bureau Data API",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006",
+      "SL-014"
+    ],
+    "path": "tickets/SL-143-source-census.md",
+    "source_id": "census"
+  },
+  {
+    "id": "SL-144",
+    "title": "Onboard FRED (Federal Reserve Bank of St. Louis) API",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006",
+      "SL-014"
+    ],
+    "path": "tickets/SL-144-source-fred.md",
+    "source_id": "fred"
+  },
+  {
+    "id": "SL-145",
+    "title": "Onboard OpenFEC API",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006",
+      "SL-014"
+    ],
+    "path": "tickets/SL-145-source-openfec.md",
+    "source_id": "openfec"
+  },
+  {
+    "id": "SL-146",
+    "title": "Onboard CourtListener API",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006",
+      "SL-014"
+    ],
+    "path": "tickets/SL-146-source-courtlistener.md",
+    "source_id": "courtlistener"
+  },
+  {
+    "id": "SL-147",
+    "title": "Onboard Other official agency, legislative and court publications",
+    "status": "access_and_contract_gate",
+    "gate": "G2",
+    "dependencies": [
+      "SL-003",
+      "SL-004",
+      "SL-006",
+      "SL-014"
+    ],
+    "path": "tickets/SL-147-source-official_publications.md",
+    "source_id": "official_publications"
+  },
+  {
+    "id": "SL-201",
+    "title": "Shared claim index and provenance-preserving bulk seeds",
+    "status": "verified_local_reference",
+    "gate": "G3",
+    "dependencies": [
+      "SL-001"
+    ],
+    "path": "tickets/SL-201-shared-claim-index-and-provenance-preserving-bulk-seeds.md"
+  },
+  {
+    "id": "SL-202",
+    "title": "Revision-bound evidence cards and correction blocking",
+    "status": "verified_local_reference",
+    "gate": "G3",
+    "dependencies": [
+      "SL-201"
+    ],
+    "path": "tickets/SL-202-revision-bound-evidence-cards-and-correction-blocking.md"
+  },
+  {
+    "id": "SL-203",
+    "title": "Confirmed-turn event-deduplicated phrase profiles",
+    "status": "verified_local_reference",
+    "gate": "G3",
+    "dependencies": [
+      "SL-001"
+    ],
+    "path": "tickets/SL-203-confirmed-turn-event-deduplicated-phrase-profiles.md"
+  },
+  {
+    "id": "SL-204",
+    "title": "Incremental profile refresh with evaluation exclusions",
+    "status": "verified_local_reference",
+    "gate": "G3",
+    "dependencies": [
+      "SL-203"
+    ],
+    "path": "tickets/SL-204-incremental-profile-refresh-with-evaluation-exclusions.md"
+  },
+  {
+    "id": "SL-205",
+    "title": "Caption window planner and shared audio interval unions",
+    "status": "verified_local_reference",
+    "gate": "G3",
+    "dependencies": [
+      "SL-203"
+    ],
+    "path": "tickets/SL-205-caption-window-planner-and-shared-audio-interval-unions.md"
+  },
+  {
+    "id": "SL-206",
+    "title": "Official TypeSafe transport and bounded model orchestration",
+    "status": "verified_mock_contract",
+    "gate": "G2",
+    "dependencies": [
+      "SL-205"
+    ],
+    "path": "tickets/SL-206-official-typesafe-transport-and-bounded-model-orchestration.md"
+  },
+  {
+    "id": "SL-207",
+    "title": "Raw capture and quantization-aware fault handling",
+    "status": "verified_mock_contract",
+    "gate": "G2",
+    "dependencies": [
+      "SL-206"
+    ],
+    "path": "tickets/SL-207-raw-capture-and-quantization-aware-fault-handling.md"
+  },
+  {
+    "id": "SL-208",
+    "title": "Selective media execution and offset-preserving manifests",
+    "status": "verified_synthetic_media",
+    "gate": "G3",
+    "dependencies": [
+      "SL-205"
+    ],
+    "path": "tickets/SL-208-selective-media-execution-and-offset-preserving-manifests.md"
+  },
+  {
+    "id": "SL-209",
+    "title": "Coverage diagnostics and full-cost comparison tools",
+    "status": "verified_local_reference",
+    "gate": "G3",
+    "dependencies": [
+      "SL-205"
+    ],
+    "path": "tickets/SL-209-coverage-diagnostics-and-full-cost-comparison-tools.md"
+  },
+  {
+    "id": "SL-210",
+    "title": "Additive database migration and release artifact proof",
+    "status": "verified_local_reference",
+    "gate": "G3",
+    "dependencies": [
+      "SL-201",
+      "SL-207"
+    ],
+    "path": "tickets/SL-210-additive-database-migration-and-release-artifact-proof.md"
+  },
+  {
+    "id": "SL-211",
+    "title": "Execute authorized pinned Jev contract acceptance",
+    "status": "proposed",
+    "gate": "G2",
+    "dependencies": [
+      "SL-206",
+      "SL-207"
+    ],
+    "path": "tickets/SL-211-execute-authorized-pinned-jev-contract-acceptance.md"
+  },
+  {
+    "id": "SL-212",
+    "title": "Build independently labeled cross-program localization corpus",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-203",
+      "SL-205"
+    ],
+    "path": "tickets/SL-212-build-independently-labeled-cross-program-localization-corpus.md"
+  },
+  {
+    "id": "SL-213",
+    "title": "Validate local speaker embeddings and target-speaker detection",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-208",
+      "SL-212"
+    ],
+    "path": "tickets/SL-213-validate-local-speaker-embeddings-and-target-speaker-detection.md"
+  },
+  {
+    "id": "SL-214",
+    "title": "Fit and govern event-held-out localization calibration",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-211",
+      "SL-212",
+      "SL-213"
+    ],
+    "path": "tickets/SL-214-fit-and-govern-event-held-out-localization-calibration.md"
+  },
+  {
+    "id": "SL-215",
+    "title": "Benchmark broad paraphrase retrieval and large claim storage",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-201",
+      "SL-202"
+    ],
+    "path": "tickets/SL-215-benchmark-broad-paraphrase-retrieval-and-large-claim-storage.md"
+  },
+  {
+    "id": "SL-216",
+    "title": "Reconcile edited-video duplicates and uncertain event timelines",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-008",
+      "SL-009",
+      "SL-205"
+    ],
+    "path": "tickets/SL-216-reconcile-edited-video-duplicates-and-uncertain-event-timelines.md"
+  },
+  {
+    "id": "SL-217",
+    "title": "Connect accepted-turn events to scheduled profile proposals",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-204",
+      "SL-017"
+    ],
+    "path": "tickets/SL-217-connect-accepted-turn-events-to-scheduled-profile-proposals.md"
+  },
+  {
+    "id": "SL-218",
+    "title": "Complete real browser validation and collaborative review UX",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-205",
+      "SL-202"
+    ],
+    "path": "tickets/SL-218-complete-real-browser-validation-and-collaborative-review-ux.md"
+  },
+  {
+    "id": "SL-219",
+    "title": "Measure and route by all-in processing cost",
+    "status": "proposed",
+    "gate": "G3",
+    "dependencies": [
+      "SL-209",
+      "SL-211",
+      "SL-213"
+    ],
+    "path": "tickets/SL-219-measure-and-route-by-all-in-processing-cost.md"
+  },
+  {
+    "id": "SL-220",
+    "title": "Purge revoked source-derived profiles and provider artifacts",
+    "status": "proposed",
+    "gate": "G2",
+    "dependencies": [
+      "SL-006",
+      "SL-207"
+    ],
+    "path": "tickets/SL-220-purge-revoked-source-derived-profiles-and-provider-artifacts.md"
+  }
+]

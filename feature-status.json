@@ -1,0 +1,245 @@
+{
+  "version": "0.2.0",
+  "as_of": "2026-09-27",
+  "features": [
+    {
+      "id": "SL-C01",
+      "capability": "Single-owner local application",
+      "status": "implemented_local_tested",
+      "evidence": "api.py; store.py; cli.py",
+      "boundary": "Authenticated API and inspector; not multi-user SaaS."
+    },
+    {
+      "id": "SL-C02",
+      "capability": "Typed canonical records",
+      "status": "implemented_local_tested",
+      "evidence": "models.py; acceleration_models.py; contracts/",
+      "boundary": "20 record kinds; schemas generated from actual implementation."
+    },
+    {
+      "id": "SL-C03",
+      "capability": "Versioning and optimistic concurrency",
+      "status": "implemented_local_tested",
+      "evidence": "store.py; test_domain.py",
+      "boundary": "Append-only revisions; expected_revision required for updates."
+    },
+    {
+      "id": "SL-C04",
+      "capability": "Dependency invalidation",
+      "status": "implemented_local_tested",
+      "evidence": "service.py; store.py",
+      "boundary": "Parent revisions make descendants stale; no silent reapproval."
+    },
+    {
+      "id": "SL-C05",
+      "capability": "Person source planner",
+      "status": "implemented_local_tested",
+      "evidence": "discovery.py; sources.json",
+      "boundary": "All 47 entries retained; primary-evidence sources are claim-driven, not name-queried; does not automatically execute them."
+    },
+    {
+      "id": "SL-C06",
+      "capability": "File ingestion and parsers",
+      "status": "implemented_local_tested",
+      "evidence": "connectors/parsers.py; ingest.py",
+      "boundary": "Synthetic format fixtures; no large live-corpus bakeoff."
+    },
+    {
+      "id": "SL-C07",
+      "capability": "Four public API client surfaces",
+      "status": "implemented_mock_tested",
+      "evidence": "connectors/http.py; test_http.py",
+      "boundary": "YouTube metadata, Google fact-check, Archive, AAPB metadata. Real response proof pending."
+    },
+    {
+      "id": "SL-C08",
+      "capability": "Other named source integrations",
+      "status": "specified_access_dependent",
+      "evidence": "sources.json; docs/sources/",
+      "boundary": "Registry contracts and manual input path; no invented vendor endpoints."
+    },
+    {
+      "id": "SL-C09",
+      "capability": "VTT/SRT and ASR export imports",
+      "status": "implemented_local_tested",
+      "evidence": "transcripts.py",
+      "boundary": "Local labels and segment timing; not verified real-world speaker identity."
+    },
+    {
+      "id": "SL-C10",
+      "capability": "Optional speech inference",
+      "status": "implemented_not_live_executed",
+      "evidence": "speech.py; media_work.py",
+      "boundary": "faster-whisper, pyannote and local SpeechBrain adapter logic; no real weights or inference benchmark."
+    },
+    {
+      "id": "SL-C11",
+      "capability": "Reviewed speaker mapping",
+      "status": "implemented_local_tested",
+      "evidence": "service.py; speech.py",
+      "boundary": "Human-reviewed identity mappings; optional advisory acoustic comparison exists but is not live-validated."
+    },
+    {
+      "id": "SL-C12",
+      "capability": "Local audio/video clip invocation",
+      "status": "implemented_local_tested",
+      "evidence": "media.py; test_media.py",
+      "boundary": "FFmpeg synthetic WAV execution passed; video-format matrix pending."
+    },
+    {
+      "id": "SL-C13",
+      "capability": "Exact reviewed event-coordinate deduplication",
+      "status": "implemented_local_tested",
+      "evidence": "service.py; test_domain.py",
+      "boundary": "Copy and original collapse at identical verified boundaries. Fuzzy/piecewise matching pending."
+    },
+    {
+      "id": "SL-C14",
+      "capability": "Claim/evidence/review recording",
+      "status": "implemented_local_tested",
+      "evidence": "models.py; service.py",
+      "boundary": "Validation of provenance/scope/relations; humans supply interpretations. Not autonomous fact-checking."
+    },
+    {
+      "id": "SL-C15",
+      "capability": "Corrections",
+      "status": "partly_implemented",
+      "evidence": "models.py; service.py; claim_library.py",
+      "boundary": "Open corrections block review-card reuse; explicit resolved records supported; full adjudication UI pending."
+    },
+    {
+      "id": "SL-C16",
+      "capability": "Coverage records",
+      "status": "partly_implemented",
+      "evidence": "models.py; service.py",
+      "boundary": "Manual bounded coverage records; automatic run reconciliation pending."
+    },
+    {
+      "id": "SL-C17",
+      "capability": "Durable job leases",
+      "status": "implemented_local_tested",
+      "evidence": "jobs.py; test_jobs.py",
+      "boundary": "Queue primitives tested. No fully connected worker/scheduler/outbox consumer."
+    },
+    {
+      "id": "SL-C18",
+      "capability": "Raw retention and rights",
+      "status": "partly_implemented",
+      "evidence": "ingest.py; policy.py",
+      "boundary": "Source-level grants and expiry gates; purge/revocation propagation and asset-level grants pending."
+    },
+    {
+      "id": "SL-C19",
+      "capability": "Operator UI",
+      "status": "implemented_static_route_tested_browser_blocked",
+      "evidence": "static/; tests/test_acceleration_interfaces.py",
+      "boundary": "Profiles, window planner and claim-search views added; actual browser navigation blocked, no visual pass."
+    },
+    {
+      "id": "SL-C20",
+      "capability": "Auditing and backup",
+      "status": "implemented_local_tested",
+      "evidence": "store.py; cli.py",
+      "boundary": "Native SQLite backup, exact-byte provider receipt retention and JSON base64 export; not externally witnessed tamper-proof storage."
+    },
+    {
+      "id": "SL-C21",
+      "capability": "Production database and deployment",
+      "status": "specified_not_implemented",
+      "evidence": "docs/spec/11_ARCHITECTURE_AND_STORAGE.md",
+      "boundary": "SQLite core only. Migration, role-based multi-user auth, external object storage and production rollout pending."
+    },
+    {
+      "id": "SL-C22",
+      "capability": "Real subject investigation",
+      "status": "not_executed",
+      "evidence": "config/subject.scott-jennings.json",
+      "boundary": "Name-only seed. No real appearances, quotes, allegations, or findings loaded."
+    },
+    {
+      "id": "SL-C23",
+      "capability": "Remote GitHub repository",
+      "status": "not_created",
+      "evidence": "scripts/publish-github.*",
+      "boundary": "Separate local Git history and publishing helpers; no connected create-repository action."
+    },
+    {
+      "id": "SL-C24",
+      "capability": "Public publication",
+      "status": "disabled_and_not_implemented",
+      "evidence": "docs/spec/16_EVALUATION_AND_RELEASE_GATES.md",
+      "boundary": "Internal research only; independent publication, permissions and review gates required."
+    },
+    {
+      "id": "SL-C25",
+      "capability": "Shared claim library and seed ingestion",
+      "status": "implemented_local_tested",
+      "evidence": "claim_library.py; claim_seeds.py",
+      "boundary": "FTS5 and exact seed dedup; no automatic truth import or large real-corpus benchmark."
+    },
+    {
+      "id": "SL-C26",
+      "capability": "Reusable reviewed evidence cards",
+      "status": "implemented_local_tested",
+      "evidence": "claim_library.py; acceleration_service.py",
+      "boundary": "Current exact proposition/review bindings, expiry, corrections and scope; never automatic verdict reuse."
+    },
+    {
+      "id": "SL-C27",
+      "capability": "Event-deduplicated language profiles",
+      "status": "implemented_local_tested",
+      "evidence": "profiles.py",
+      "boundary": "Accepted target/background turns only; opening/closing/interior n-grams; no learned rhetorical classifier."
+    },
+    {
+      "id": "SL-C28",
+      "capability": "Incremental accepted-turn refresh",
+      "status": "implemented_local_tested",
+      "evidence": "profiles.py; cli.py; api.py",
+      "boundary": "Explicit refresh, holdout exclusions and curated comparison people; no always-on subscriber."
+    },
+    {
+      "id": "SL-C29",
+      "capability": "Caption-first window localization",
+      "status": "implemented_local_tested",
+      "evidence": "localization.py; intervals.py",
+      "boundary": "Shadow/assist windows with gaps, audits, unions and full fallback; research thresholds are uncalibrated."
+    },
+    {
+      "id": "SL-C30",
+      "capability": "TypeSafe Jev transport and cache",
+      "status": "implemented_mock_tested",
+      "evidence": "jev.py; tests/test_jev.py",
+      "boundary": "Official endpoint and raw capture; retries, typed validation and quantization diagnostics; no live provider proof."
+    },
+    {
+      "id": "SL-C31",
+      "capability": "Jev claim and window orchestration",
+      "status": "implemented_mock_tested",
+      "evidence": "acceleration.py; claim_library.py",
+      "boundary": "Bounded batches and cached typed proposals; no identity or finding approval."
+    },
+    {
+      "id": "SL-C32",
+      "capability": "Selective local audio execution",
+      "status": "implemented_local_tested",
+      "evidence": "media_work.py; media.py",
+      "boundary": "Synthetic FFmpeg execution and durable manifests verified; real ASR/diarization unexecuted."
+    },
+    {
+      "id": "SL-C33",
+      "capability": "Localization evaluation and cost estimates",
+      "status": "implemented_local_tested",
+      "evidence": "evaluation.py",
+      "boundary": "Coverage/calibration diagnostics and user-priced costs; no fitted calibrator, deployed thresholds or real speedup guarantee."
+    },
+    {
+      "id": "SL-C34",
+      "capability": "Additive v0.1 database upgrade",
+      "status": "implemented_local_tested",
+      "evidence": "store.py; tests/test_acceleration_interfaces.py",
+      "boundary": "Adds index/receipts without rewriting original hashes; use native backup before upgrade."
+    }
+  ],
+  "specification_version": "1.1"
+}

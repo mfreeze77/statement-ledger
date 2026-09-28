@@ -1,0 +1,18 @@
+{
+  "synthetic": true,
+  "records": 10000,
+  "python": "3.13.5",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "ingest_seconds": 15.37467327599984,
+  "records_per_second": 650.4203257190637,
+  "searches": 50,
+  "median_search_ms": 19.268575999944915,
+  "p95_search_ms": 20.32258499980344,
+  "all_queries_returned_20": true,
+  "database_bytes": 22323200,
+  "sqlite_version": "3.46.1",
+  "limitations": [
+    "Synthetic ambiguous records only; no real source ingestion, evidence graph, review cards, provider calls or speech processing.",
+    "Single process/local filesystem; timings are not a scale guarantee and retrieval quality is not measured."
+  ]
+}

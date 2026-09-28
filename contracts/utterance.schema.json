@@ -1,0 +1,88 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "appearance_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Appearance Id",
+      "type": "string"
+    },
+    "context_reviewed": {
+      "default": false,
+      "title": "Context Reviewed",
+      "type": "boolean"
+    },
+    "exact_text": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "title": "Exact Text",
+      "type": "string"
+    },
+    "id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "mapping_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Mapping Id",
+      "type": "string"
+    },
+    "overlap_resolved": {
+      "default": false,
+      "title": "Overlap Resolved",
+      "type": "boolean"
+    },
+    "reviewer": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reviewer"
+    },
+    "segment_indices": {
+      "items": {
+        "minimum": 0,
+        "type": "integer"
+      },
+      "minItems": 1,
+      "title": "Segment Indices",
+      "type": "array"
+    },
+    "status": {
+      "default": "candidate",
+      "enum": [
+        "candidate",
+        "accepted"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "transcript_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Transcript Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "transcript_id",
+    "mapping_id",
+    "appearance_id",
+    "segment_indices",
+    "exact_text"
+  ],
+  "title": "Utterance",
+  "type": "object"
+}

@@ -1,0 +1,9 @@
+{
+  "source_downloads": "Blocked by DNS in execution runtime",
+  "uv_lock": "Dependency registry DNS resolution failed; no lock produced",
+  "optional_speech_models": "Not downloaded or executed",
+  "browser": "System Chromium launched; local navigation blocked by administrator",
+  "docker": "Executable unavailable; build/run not attempted",
+  "powershell": "Executable unavailable; script not executed",
+  "github_remote": "Creation unsupported by available connected actions; not created"
+}

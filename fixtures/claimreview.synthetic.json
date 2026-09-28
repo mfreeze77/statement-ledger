@@ -1,0 +1,25 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ClaimReview",
+  "id": "synthetic-review",
+  "url": "https://example.org/synthetic/review",
+  "claimReviewed": "Synthetic Lab processed 200 samples in 2025.",
+  "author": {
+    "@type": "Organization",
+    "name": "Synthetic Review Publisher"
+  },
+  "itemReviewed": {
+    "author": {
+      "@type": "Person",
+      "name": "Dana Example"
+    },
+    "appearance": [
+      {
+        "url": "https://example.org/synthetic/appearance"
+      }
+    ]
+  },
+  "reviewRating": {
+    "alternateName": "Synthetic publisher wording; no shared numerical scale"
+  }
+}

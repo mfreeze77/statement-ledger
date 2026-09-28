@@ -1,0 +1,1 @@
+{"quoteID": "2020-01-01-000001", "quotation": "Synthetic Lab processed 200 samples in 2025.", "speaker": "Dana Example", "date": "2020-01-01", "urls": ["https://example.org/synthetic/article"], "probas": [["Dana Example", 0.7], ["None", 0.3]], "qids": [], "numOccurrences": 20}

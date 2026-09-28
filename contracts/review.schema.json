@@ -1,0 +1,111 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "evidence_ids": {
+      "items": {
+        "maxLength": 180,
+        "minLength": 1,
+        "pattern": "^[a-zA-Z0-9_.:-]+$",
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "finding": {
+      "default": "unresolved",
+      "enum": [
+        "supported",
+        "contradicted",
+        "mixed",
+        "unresolved",
+        "not_checkable"
+      ],
+      "title": "Finding",
+      "type": "string"
+    },
+    "id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "limitations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "occurrence_ids": {
+      "items": {
+        "maxLength": 180,
+        "minLength": 1,
+        "pattern": "^[a-zA-Z0-9_.:-]+$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Occurrence Ids",
+      "type": "array"
+    },
+    "proposition_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Proposition Id",
+      "type": "string"
+    },
+    "rationale": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "title": "Rationale",
+      "type": "string"
+    },
+    "reviewed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reviewed At"
+    },
+    "reviewer": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reviewer"
+    },
+    "scope_reviewed": {
+      "default": false,
+      "title": "Scope Reviewed",
+      "type": "boolean"
+    },
+    "status": {
+      "default": "draft",
+      "enum": [
+        "draft",
+        "reviewed"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "proposition_id",
+    "occurrence_ids",
+    "rationale"
+  ],
+  "title": "Review",
+  "type": "object"
+}

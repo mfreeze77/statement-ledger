@@ -1,0 +1,28 @@
+{
+  "wheel_import_path": "/mnt/data/v02-wheel-installed/statement_ledger/__init__.py",
+  "package_version": "0.2.0",
+  "demo_exit_code": 0,
+  "selected_audio_ms": 315000,
+  "source_duration_ms": 600000,
+  "evaluation": {
+    "event_id": "style-heldout-event",
+    "truth_complete": true,
+    "selected_audio_ms": 315000,
+    "target_audio_ms": 20000,
+    "captured_target_audio_ms": 20000,
+    "missed_target_audio_ms": 0,
+    "target_time_recall": 1.0,
+    "fully_covered_turns": 2,
+    "gold_turns": 2,
+    "audio_fraction": 0.525,
+    "deployment_gate_passed": false,
+    "limitation": "Metrics describe supplied labels; no proof of their completeness. No threshold is auto-promoted."
+  },
+  "static_assets_present": true,
+  "dependency_mode": "Wheel installed with --no-deps against preinstalled dependencies, not a fresh network-resolved environment.",
+  "static_assets_checked": [
+    "index.html",
+    "app.js",
+    "style.css"
+  ]
+}

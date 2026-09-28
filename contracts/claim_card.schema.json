@@ -1,0 +1,63 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "approved_by": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "title": "Approved By",
+      "type": "string"
+    },
+    "automatic_verdict_reuse": {
+      "const": false,
+      "default": false,
+      "title": "Automatic Verdict Reuse",
+      "type": "boolean"
+    },
+    "freshness_rationale": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "title": "Freshness Rationale",
+      "type": "string"
+    },
+    "id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "proposition_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Proposition Id",
+      "type": "string"
+    },
+    "review_ids": {
+      "items": {
+        "maxLength": 180,
+        "minLength": 1,
+        "pattern": "^[a-zA-Z0-9_.:-]+$",
+        "type": "string"
+      },
+      "maxItems": 1000,
+      "minItems": 1,
+      "title": "Review Ids",
+      "type": "array"
+    },
+    "valid_until": {
+      "format": "date-time",
+      "title": "Valid Until",
+      "type": "string"
+    }
+  },
+  "required": [
+    "proposition_id",
+    "review_ids",
+    "valid_until",
+    "freshness_rationale",
+    "approved_by"
+  ],
+  "title": "ClaimCard",
+  "type": "object"
+}

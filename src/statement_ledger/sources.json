@@ -1,0 +1,748 @@
+[
+  {
+    "id": "youtube",
+    "name": "YouTube Data API",
+    "role": "appearance_discovery",
+    "access": "api_key",
+    "implementation": "http_client",
+    "parser": "youtube",
+    "documentation_urls": [
+      "https://developers.google.com/youtube/v3/docs/search/list"
+    ],
+    "limitations": "Search and channel-upload metadata; no unauthorized caption or media downloading.",
+    "next_step": "Configure an API key and explicit query/page budgets; approve retention policy.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "cnn_transcripts",
+    "name": "CNN program transcripts",
+    "role": "transcript_discovery",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://transcripts.cnn.com/"
+    ],
+    "limitations": "Program/date text can locate appearances; pages are not media-download licenses.",
+    "next_step": "Obtain permitted exports; capture a real schema fixture before a dedicated adapter.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "cbs_transcripts",
+    "name": "CBS program transcripts",
+    "role": "transcript_discovery",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.cbsnews.com/face-the-nation/transcripts/"
+    ],
+    "limitations": "Official program text; access and HTML format may vary.",
+    "next_step": "Use permitted transcript export and the manual input contract.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "internet_archive",
+    "name": "Internet Archive",
+    "role": "archive_discovery",
+    "access": "public_api_item_rights",
+    "implementation": "http_client",
+    "parser": "internet_archive",
+    "documentation_urls": [
+      "https://archive.org/developers/md-read.html"
+    ],
+    "limitations": "Metadata and file inventory, not a guarantee of downloadable TV recordings.",
+    "next_step": "Inspect item-level availability and rights before selecting files.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "gdelt_tv",
+    "name": "GDELT Television Explorer",
+    "role": "broadcast_discovery",
+    "access": "public_interface",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://blog.gdeltproject.org/gdelt-2-0-television-api-debuts/"
+    ],
+    "limitations": "Coverage and time ranges vary by interface; captions can contain errors.",
+    "next_step": "Capture current endpoint/response contract; do not assume archive completeness.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "gdelt_visual",
+    "name": "GDELT Visual Explorer",
+    "role": "visual_discovery",
+    "access": "public_interface",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://blog.gdeltproject.org/"
+    ],
+    "limitations": "Visual/on-screen-text leads are distinct from spoken statements.",
+    "next_step": "Locate current Visual Explorer documentation and a permitted export; the previously proposed deep-link could not be verified.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "gdelt_tv_ngrams",
+    "name": "GDELT Television Ngrams",
+    "role": "frequency_signal",
+    "access": "public_files",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://blog.gdeltproject.org/announcing-the-television-news-ngram-2-0-dataset/"
+    ],
+    "limitations": "Aggregated phrase counts cannot reconstruct statements or establish speakers.",
+    "next_step": "Obtain documented sample files and implement a frequency-only adapter.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "gdelt_gqg",
+    "name": "GDELT Global Quotation Graph",
+    "role": "quotation_discovery",
+    "access": "public_files",
+    "implementation": "file_parser",
+    "parser": "gdelt_gqg",
+    "documentation_urls": [
+      "https://blog.gdeltproject.org/announcing-the-global-quotation-graph/"
+    ],
+    "limitations": "Nested quotations with context; no automatic speaker confirmation.",
+    "next_step": "Download an authorized dated .gqg.json.gz file, retain checksum, then ingest.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "quotebank",
+    "name": "Quotebank",
+    "role": "quotation_discovery",
+    "access": "dataset_terms",
+    "implementation": "file_parser",
+    "parser": "quotebank",
+    "documentation_urls": [
+      "https://zenodo.org/records/4277311"
+    ],
+    "limitations": "Historical 2008\u20132020 quotations; probabilistic speaker labels remain leads.",
+    "next_step": "Review dataset rights and choose quotation-centric JSONL .bz2.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "media_cloud",
+    "name": "Media Cloud",
+    "role": "article_discovery",
+    "access": "api_credentials",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.mediacloud.org/documentation/search-api-guide"
+    ],
+    "limitations": "Article metadata/discovery is not a full-text export license.",
+    "next_step": "Obtain credentials and a current first-party client response fixture.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "lexisnexis",
+    "name": "LexisNexis / Nexis Uni",
+    "role": "licensed_transcripts",
+    "access": "commercial",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://supportcenter.lexisnexis.com/app/answers/answer_view/a_id/1084106/~/how-to-find-speeches-and-transcripts-in-the-news"
+    ],
+    "limitations": "Interactive research access does not imply bulk API rights.",
+    "next_step": "Negotiate transcript exports or a feed; supply actual schema samples.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "tveyes",
+    "name": "TVEyes",
+    "role": "licensed_transcripts",
+    "access": "commercial",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.tveyes.com/api-partners/"
+    ],
+    "limitations": "Advertises APIs and data feeds; endpoint and reuse contract needed.",
+    "next_step": "Request evaluation transcript/audio package and written retention/derivation rights.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "critical_mention",
+    "name": "Critical Mention",
+    "role": "licensed_transcripts",
+    "access": "commercial",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.criticalmention.com/api/"
+    ],
+    "limitations": "Advertises JSON HTTP API; partner contract remains necessary.",
+    "next_step": "Request credentials, pagination contract, historical backfill limits, sample records.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "sprinklr",
+    "name": "Sprinklr",
+    "role": "monitoring",
+    "access": "commercial",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.sprinklr.com/help/articles/data-sources/standard-sources-in-media-monitoring-analytics/648730d5723d925979dbc667"
+    ],
+    "limitations": "Coverage documentation alone does not establish API/export scope.",
+    "next_step": "Verify purchased package exports and exact permitted content fields.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "snapstream",
+    "name": "SnapStream",
+    "role": "authorized_capture",
+    "access": "commercial",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.snapstream.com/"
+    ],
+    "limitations": "Operator-controlled capture/export; feed rights remain separate.",
+    "next_step": "Obtain authorized recording export plus captions and program metadata.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "grabien",
+    "name": "Grabien",
+    "role": "clip_discovery",
+    "access": "commercial_or_publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://grabien.com/"
+    ],
+    "limitations": "Clip discovery; no public bulk API contract verified here.",
+    "next_step": "Request permitted exports or partnership access; link clips to original events.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "aapb",
+    "name": "American Archive of Public Broadcasting",
+    "role": "archive_discovery",
+    "access": "public_metadata_restricted_transcripts",
+    "implementation": "http_client",
+    "parser": "aapb",
+    "documentation_urls": [
+      "https://github.com/WGBH-MLA/AAPB2"
+    ],
+    "limitations": "Public metadata; transcript API needs research credentials; schema is experimental.",
+    "next_step": "Use metadata client; request transcript credentials and capture actual samples.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "cspan",
+    "name": "C-SPAN Video Library",
+    "role": "public_event_discovery",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.c-span.org/"
+    ],
+    "limitations": "Program/clip leads; user clip titles are not verified event descriptions.",
+    "next_step": "Obtain permitted source records; confirm original program and time alignment.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "vanderbilt",
+    "name": "Vanderbilt Television News Archive",
+    "role": "historical_discovery",
+    "access": "research_loan",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://blog.tvnews.vanderbilt.edu/access-information/"
+    ],
+    "limitations": "Research/loan access; not a general footage redistribution license.",
+    "next_step": "Arrange permitted research access and record restrictions per item.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "google_fact_check",
+    "name": "Google Fact Check Tools API",
+    "role": "review_discovery",
+    "access": "api_key",
+    "implementation": "http_client",
+    "parser": "google_fact_check",
+    "documentation_urls": [
+      "https://developers.google.com/fact-check/tools/api/reference/rest/v1alpha1/claims/search"
+    ],
+    "limitations": "Paginated claim search; no guaranteed enumerate-all dump.",
+    "next_step": "Configure key; use claim/publisher queries and preserve pagination.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "claimreview",
+    "name": "ClaimReview structured data",
+    "role": "review_format",
+    "access": "publisher_terms",
+    "implementation": "file_parser",
+    "parser": "claimreview",
+    "documentation_urls": [
+      "https://schema.org/ClaimReview"
+    ],
+    "limitations": "A vocabulary, not an independent publisher or truth source.",
+    "next_step": "Import authorized JSON/JSON-LD while retaining the actual publishing organization.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "fact_check_insights",
+    "name": "Fact-Check Insights",
+    "role": "review_discovery",
+    "access": "registration_terms",
+    "implementation": "file_parser",
+    "parser": "fact_check_insights",
+    "documentation_urls": [
+      "https://www.factcheckinsights.org/guide"
+    ],
+    "limitations": "Bulk claim/review metadata; raw ratings remain publisher-attributed.",
+    "next_step": "Obtain authorized JSON export; clarify compilation/media/commercial permissions.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "media_vault",
+    "name": "MediaVault / MediaReview",
+    "role": "media_authenticity",
+    "access": "registration_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.factcheckinsights.org/about"
+    ],
+    "limitations": "Archived media/reviews have separate permission questions.",
+    "next_step": "Request access and sample MediaReview records; preserve source-media chain.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "politifact",
+    "name": "PolitiFact",
+    "role": "review_discovery",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.politifact.com/"
+    ],
+    "limitations": "Selected investigations, not a representative sample of everything said.",
+    "next_step": "Use permitted ClaimReview or manual exports; preserve external review identity.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "punditfact",
+    "name": "PunditFact",
+    "role": "review_discovery",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.politifact.com/punditfact/"
+    ],
+    "limitations": "A PolitiFact collection; do not double-count a review discovered through both.",
+    "next_step": "Link to canonical publisher review; trace its source broadcast.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "factcheck_org",
+    "name": "FactCheck.org",
+    "role": "review_discovery",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.factcheck.org/"
+    ],
+    "limitations": "Published investigations and their sources; selected coverage.",
+    "next_step": "Import permitted article references and primary-evidence links.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "reuters_fact_check",
+    "name": "Reuters Fact Check",
+    "role": "review_discovery",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.reuters.com/fact-check/"
+    ],
+    "limitations": "External investigation with its own scope, date, and revision history.",
+    "next_step": "Retain attributed review; independently match the actual claim scope.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "afp_fact_check",
+    "name": "AFP Fact Check",
+    "role": "review_discovery",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://factcheck.afp.com/"
+    ],
+    "limitations": "Includes manipulated-media investigations; keep media and claim reviews distinct.",
+    "next_step": "Preserve source references, language, translation, and assessed-media identity.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "media_matters",
+    "name": "Media Matters for America",
+    "role": "watchdog_leads",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.mediamatters.org/"
+    ],
+    "limitations": "Editorially selected leads; cannot define the full monitored denominator.",
+    "next_step": "Verify original context and maintain independent source coverage inventory.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "mrc",
+    "name": "Media Research Center",
+    "role": "watchdog_leads",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.mrc.org/"
+    ],
+    "limitations": "Editorially selected leads; no outlet reputation used as evidence of a claim.",
+    "next_step": "Trace underlying source material and preserve selection origin.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "newsbusters",
+    "name": "NewsBusters",
+    "role": "watchdog_leads",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.newsbusters.org/"
+    ],
+    "limitations": "Related MRC collection; overlapping records require provenance deduplication.",
+    "next_step": "Treat excerpts as leads, not automatically accepted speaker statements.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "newsguard",
+    "name": "NewsGuard False Claim Fingerprints",
+    "role": "licensed_reviews",
+    "access": "commercial",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.newsguardtech.com/solutions/misinformation-fingerprints/"
+    ],
+    "limitations": "Machine-readable commercial research; not an automatic first-party finding.",
+    "next_step": "Negotiate feed; preserve provider fields without normalizing outlet/person scores.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "full_fact_ai",
+    "name": "Full Fact AI",
+    "role": "workflow_comparator",
+    "access": "commercial",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://fullfact.org/ai/"
+    ],
+    "limitations": "Licensed monitoring/claim matching tools; no public bulk corpus established.",
+    "next_step": "Evaluate software integration or partnership separately from a data license.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "manual_import",
+    "name": "Authorized manual input",
+    "role": "general_input",
+    "access": "operator_verified",
+    "implementation": "file_parser",
+    "parser": "manual",
+    "documentation_urls": [
+      "https://example.org/statement-ledger/manual-contract"
+    ],
+    "limitations": "For user-owned or explicitly permitted metadata, transcripts, and primary documents.",
+    "next_step": "Supply an explicit rights grant and the documented manual JSON envelope.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "tv_news_archive",
+    "name": "Internet Archive TV News Archive",
+    "role": "transcript_discovery",
+    "access": "public_interface",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://archive.org/details/tv"
+    ],
+    "limitations": "Closed-caption search and short previews locate broadcast segments; captions contain recognition errors and full-program access or reuse is restricted.",
+    "next_step": "Capture a bounded caption-search sample and record which program, date and preview fields are actually returned.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "subject_social_accounts",
+    "name": "Subject-operated social media accounts",
+    "role": "first_party_statements",
+    "access": "platform_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [],
+    "limitations": "Posts from accounts the subject verifiably operates; each platform has separate API, retention and deletion terms. The subject's own video channel is collected through the youtube source.",
+    "next_step": "Establish reviewed account ownership for each platform, then obtain a permitted export or API grant; use the manual envelope until then.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "subject_written_work",
+    "name": "Subject-authored columns, op-eds and newsletters",
+    "role": "first_party_statements",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [],
+    "limitations": "Bylined writing is first-party text but may be edited by a publisher; headlines and pull quotes are usually not written by the author.",
+    "next_step": "Inventory bylines through permitted publisher pages or feeds; retain the publication version and any correction notice.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "podcasts_radio",
+    "name": "Podcast feeds and radio programs",
+    "role": "appearance_discovery",
+    "access": "feed_or_broadcaster_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.rssboard.org/rss-specification"
+    ],
+    "limitations": "Feeds list episodes and guests but rarely transcripts; a public audio enclosure is not permission to retain, transcribe or clip it.",
+    "next_step": "Build a bounded inventory of relevant show feeds and record per-show terms before any audio acquisition.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "congress_gov",
+    "name": "Congress.gov API",
+    "role": "primary_evidence",
+    "access": "api_key",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://github.com/LibraryOfCongress/api.congress.gov"
+    ],
+    "limitations": "Legislative records (bills, actions, votes, members); text versions and action histories change as bills advance.",
+    "next_step": "Request an API key; capture a bounded sample for one bill and record the retrieved version and action date.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "govinfo",
+    "name": "GovInfo API",
+    "role": "primary_evidence",
+    "access": "api_key",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.govinfo.gov/developers"
+    ],
+    "limitations": "Official published documents (Congressional Record, statutes, hearings, budget documents); publication dates can lag events.",
+    "next_step": "Request an API key; capture a bounded document package and retain its package identifier and granule locator.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "federal_register",
+    "name": "Federal Register API",
+    "role": "primary_evidence",
+    "access": "public_api",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.federalregister.gov/developers/documentation/api/v1"
+    ],
+    "limitations": "Rules, proposed rules, notices and presidential documents; a proposed rule is not a final rule.",
+    "next_step": "Capture a bounded document sample and record document type, docket and effective date.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "bls",
+    "name": "Bureau of Labor Statistics Public Data API",
+    "role": "primary_evidence",
+    "access": "public_api",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.bls.gov/developers/"
+    ],
+    "limitations": "Official labor and price statistics; figures are revised and seasonally adjusted and unadjusted series differ.",
+    "next_step": "Capture a bounded series sample and record series ID, adjustment, period and release vintage.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "census",
+    "name": "U.S. Census Bureau Data API",
+    "role": "primary_evidence",
+    "access": "public_api",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.census.gov/data/developers.html"
+    ],
+    "limitations": "Official demographic and economic data; survey estimates carry margins of error and geography definitions change over time.",
+    "next_step": "Capture a bounded table sample and record dataset, vintage, geography and margin of error.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "fred",
+    "name": "FRED (Federal Reserve Bank of St. Louis) API",
+    "role": "primary_evidence",
+    "access": "api_key",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://fred.stlouisfed.org/docs/api/fred/"
+    ],
+    "limitations": "Aggregates series from originating agencies; cite the originating agency and the data vintage, not FRED alone.",
+    "next_step": "Request an API key; capture a bounded series sample with its originating source and vintage dates.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "openfec",
+    "name": "OpenFEC API",
+    "role": "primary_evidence",
+    "access": "api_key",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://api.open.fec.gov/developers/"
+    ],
+    "limitations": "Campaign-finance filings; amended filings supersede earlier ones and processed data can lag raw filings.",
+    "next_step": "Request an API key; capture a bounded committee sample and record filing and amendment identifiers.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "courtlistener",
+    "name": "CourtListener API",
+    "role": "primary_evidence",
+    "access": "api_token",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [
+      "https://www.courtlistener.com/help/api/"
+    ],
+    "limitations": "Court opinions, dockets and oral-argument audio; docket coverage is incomplete and a filing is not a ruling.",
+    "next_step": "Request an API token; capture a bounded docket and opinion sample and record court, docket number and document type.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  },
+  {
+    "id": "official_publications",
+    "name": "Other official agency, legislative and court publications",
+    "role": "primary_evidence",
+    "access": "publisher_terms",
+    "implementation": "contract_only",
+    "parser": null,
+    "documentation_urls": [],
+    "limitations": "Catch-all for official reports, budget scores, audits, state and local records and press releases without a dedicated connector; a press release is an official claim, not independent verification.",
+    "next_step": "Import through the manual envelope with the actual publishing body as source; add a dedicated entry once a source recurs.",
+    "enabled_by_default": false,
+    "live_connection_verified": false,
+    "reviewed_on": "2026-09-27"
+  }
+]

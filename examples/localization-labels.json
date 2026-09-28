@@ -1,0 +1,14 @@
+{
+  "asset_id": "style-heldout-asset",
+  "truth_complete": true,
+  "target_intervals": [
+    {
+      "start_ms": 100000,
+      "end_ms": 110000
+    },
+    {
+      "start_ms": 400000,
+      "end_ms": 410000
+    }
+  ]
+}

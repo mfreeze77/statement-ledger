@@ -1,0 +1,9 @@
+{
+  "id": "replace-rights-id",
+  "source_id": "manual_import",
+  "basis": "REPLACE with the documented permission or reviewed source terms and scope.",
+  "allowed": [],
+  "reviewed_by": "REPLACE with operator identity",
+  "evidence_url": null,
+  "expires_at": null
+}

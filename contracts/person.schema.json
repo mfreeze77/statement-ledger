@@ -1,0 +1,44 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "aliases": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 50,
+      "title": "Aliases",
+      "type": "array"
+    },
+    "display_name": {
+      "maxLength": 250,
+      "minLength": 1,
+      "title": "Display Name",
+      "type": "string"
+    },
+    "id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "identity_urls": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 30,
+      "title": "Identity Urls",
+      "type": "array"
+    },
+    "synthetic": {
+      "default": false,
+      "title": "Synthetic",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "display_name"
+  ],
+  "title": "Person",
+  "type": "object"
+}

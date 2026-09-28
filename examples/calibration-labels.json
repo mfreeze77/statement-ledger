@@ -1,0 +1,16 @@
+{
+  "rows": [
+    {
+      "event_id": "heldout-a",
+      "signal": 0.8,
+      "target_present": true
+    },
+    {
+      "event_id": "heldout-b",
+      "signal": 0.2,
+      "target_present": false
+    }
+  ],
+  "training_event_ids": [],
+  "bins": 5
+}

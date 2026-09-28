@@ -1,0 +1,76 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "date_evidence": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Date Evidence"
+    },
+    "date_precision": {
+      "default": "unknown",
+      "enum": [
+        "unknown",
+        "year",
+        "month",
+        "day",
+        "instant"
+      ],
+      "title": "Date Precision",
+      "type": "string"
+    },
+    "id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "observation_ids": {
+      "items": {
+        "maxLength": 180,
+        "minLength": 1,
+        "pattern": "^[a-zA-Z0-9_.:-]+$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Observation Ids",
+      "type": "array"
+    },
+    "occurred_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Occurred At"
+    },
+    "synthetic": {
+      "default": false,
+      "title": "Synthetic",
+      "type": "boolean"
+    },
+    "title": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "observation_ids"
+  ],
+  "title": "Event",
+  "type": "object"
+}

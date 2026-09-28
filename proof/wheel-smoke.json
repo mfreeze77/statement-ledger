@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "install_mode": "pip --no-deps --target with locally built wheel",
+  "dependency_environment": "existing provisioned dependencies",
+  "isolated_import_path": true,
+  "static_assets_packaged": true,
+  "source_registry_entries": 34,
+  "synthetic_seed": true,
+  "clean_network_install": false
+}

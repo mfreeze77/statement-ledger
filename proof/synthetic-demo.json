@@ -1,0 +1,372 @@
+{
+  "person": {
+    "kind": "person",
+    "id": "synthetic-dana-example",
+    "revision": 1,
+    "payload": {
+      "aliases": [],
+      "display_name": "Dana Example (synthetic)",
+      "id": "synthetic-dana-example",
+      "identity_urls": [],
+      "synthetic": true
+    },
+    "hash": "2de339a86ff0e512b0879f5d0a893b6dcbb728501931fcf934789d5ef6bf965d",
+    "dependencies": [],
+    "created_at": "2026-09-27T22:46:40.591814+00:00",
+    "actor": "synthetic-fixture",
+    "stale": false,
+    "stale_reason": null,
+    "historical_revision": false
+  },
+  "items": [
+    {
+      "occurrence_id": "occurrence-asset-copy",
+      "canonical_key": "bd0d3e83d9f488dec1c892c3d03c6fe320e2c9b8a79365e91feac92b56c5a38e",
+      "event_id": "event-1",
+      "asset_id": "asset-copy",
+      "asset_role": "excerpt",
+      "proposition_id": "proposition-1",
+      "exact_text": "Synthetic Lab processed 200 samples in 2025.",
+      "event_start_ms": 20000,
+      "event_end_ms": 25000,
+      "source_start_ms": 0,
+      "source_end_ms": 5000,
+      "source_url": "https://example.org/asset-copy",
+      "reviews": [
+        {
+          "kind": "review",
+          "id": "review-1",
+          "revision": 1,
+          "payload": {
+            "evidence_ids": [
+              "evidence-1"
+            ],
+            "finding": "contradicted",
+            "id": "review-1",
+            "limitations": [
+              "Entirely fabricated test data, not a real-world investigation."
+            ],
+            "occurrence_ids": [
+              "occurrence-asset-original",
+              "occurrence-asset-copy",
+              "occurrence-asset-repeat"
+            ],
+            "proposition_id": "proposition-1",
+            "rationale": "Synthetic fixture: 200 differs from the synthetic primary log value of 100. No intent claim.",
+            "reviewed_at": "2026-09-27T00:00:00Z",
+            "reviewer": "synthetic-fixture",
+            "scope_reviewed": true,
+            "status": "reviewed"
+          },
+          "hash": "dcb18c0e8cd381ebb79963fc2deacc01da73820531f8bcff45e3fff846106178",
+          "dependencies": [
+            {
+              "id": "evidence-1",
+              "kind": "evidence",
+              "revision": 1
+            },
+            {
+              "id": "occurrence-asset-copy",
+              "kind": "occurrence",
+              "revision": 1
+            },
+            {
+              "id": "occurrence-asset-original",
+              "kind": "occurrence",
+              "revision": 1
+            },
+            {
+              "id": "occurrence-asset-repeat",
+              "kind": "occurrence",
+              "revision": 1
+            },
+            {
+              "id": "proposition-1",
+              "kind": "proposition",
+              "revision": 1
+            }
+          ],
+          "created_at": "2026-09-27T22:46:40.605492+00:00",
+          "actor": "synthetic-fixture",
+          "stale": false,
+          "stale_reason": null,
+          "historical_revision": false
+        }
+      ]
+    },
+    {
+      "occurrence_id": "occurrence-asset-original",
+      "canonical_key": "bd0d3e83d9f488dec1c892c3d03c6fe320e2c9b8a79365e91feac92b56c5a38e",
+      "event_id": "event-1",
+      "asset_id": "asset-original",
+      "asset_role": "original",
+      "proposition_id": "proposition-1",
+      "exact_text": "Synthetic Lab processed 200 samples in 2025.",
+      "event_start_ms": 20000,
+      "event_end_ms": 25000,
+      "source_start_ms": 20000,
+      "source_end_ms": 25000,
+      "source_url": "https://example.org/asset-original",
+      "reviews": [
+        {
+          "kind": "review",
+          "id": "review-1",
+          "revision": 1,
+          "payload": {
+            "evidence_ids": [
+              "evidence-1"
+            ],
+            "finding": "contradicted",
+            "id": "review-1",
+            "limitations": [
+              "Entirely fabricated test data, not a real-world investigation."
+            ],
+            "occurrence_ids": [
+              "occurrence-asset-original",
+              "occurrence-asset-copy",
+              "occurrence-asset-repeat"
+            ],
+            "proposition_id": "proposition-1",
+            "rationale": "Synthetic fixture: 200 differs from the synthetic primary log value of 100. No intent claim.",
+            "reviewed_at": "2026-09-27T00:00:00Z",
+            "reviewer": "synthetic-fixture",
+            "scope_reviewed": true,
+            "status": "reviewed"
+          },
+          "hash": "dcb18c0e8cd381ebb79963fc2deacc01da73820531f8bcff45e3fff846106178",
+          "dependencies": [
+            {
+              "id": "evidence-1",
+              "kind": "evidence",
+              "revision": 1
+            },
+            {
+              "id": "occurrence-asset-copy",
+              "kind": "occurrence",
+              "revision": 1
+            },
+            {
+              "id": "occurrence-asset-original",
+              "kind": "occurrence",
+              "revision": 1
+            },
+            {
+              "id": "occurrence-asset-repeat",
+              "kind": "occurrence",
+              "revision": 1
+            },
+            {
+              "id": "proposition-1",
+              "kind": "proposition",
+              "revision": 1
+            }
+          ],
+          "created_at": "2026-09-27T22:46:40.605492+00:00",
+          "actor": "synthetic-fixture",
+          "stale": false,
+          "stale_reason": null,
+          "historical_revision": false
+        }
+      ]
+    },
+    {
+      "occurrence_id": "occurrence-asset-repeat",
+      "canonical_key": "1a0381ecf3570558a6b5eee7a632d037cabe49ee192c106878f64f8c03895c44",
+      "event_id": "event-2",
+      "asset_id": "asset-repeat",
+      "asset_role": "original",
+      "proposition_id": "proposition-1",
+      "exact_text": "Synthetic Lab processed 200 samples in 2025.",
+      "event_start_ms": 10000,
+      "event_end_ms": 15000,
+      "source_start_ms": 10000,
+      "source_end_ms": 15000,
+      "source_url": "https://example.org/asset-repeat",
+      "reviews": [
+        {
+          "kind": "review",
+          "id": "review-1",
+          "revision": 1,
+          "payload": {
+            "evidence_ids": [
+              "evidence-1"
+            ],
+            "finding": "contradicted",
+            "id": "review-1",
+            "limitations": [
+              "Entirely fabricated test data, not a real-world investigation."
+            ],
+            "occurrence_ids": [
+              "occurrence-asset-original",
+              "occurrence-asset-copy",
+              "occurrence-asset-repeat"
+            ],
+            "proposition_id": "proposition-1",
+            "rationale": "Synthetic fixture: 200 differs from the synthetic primary log value of 100. No intent claim.",
+            "reviewed_at": "2026-09-27T00:00:00Z",
+            "reviewer": "synthetic-fixture",
+            "scope_reviewed": true,
+            "status": "reviewed"
+          },
+          "hash": "dcb18c0e8cd381ebb79963fc2deacc01da73820531f8bcff45e3fff846106178",
+          "dependencies": [
+            {
+              "id": "evidence-1",
+              "kind": "evidence",
+              "revision": 1
+            },
+            {
+              "id": "occurrence-asset-copy",
+              "kind": "occurrence",
+              "revision": 1
+            },
+            {
+              "id": "occurrence-asset-original",
+              "kind": "occurrence",
+              "revision": 1
+            },
+            {
+              "id": "occurrence-asset-repeat",
+              "kind": "occurrence",
+              "revision": 1
+            },
+            {
+              "id": "proposition-1",
+              "kind": "proposition",
+              "revision": 1
+            }
+          ],
+          "created_at": "2026-09-27T22:46:40.605492+00:00",
+          "actor": "synthetic-fixture",
+          "stale": false,
+          "stale_reason": null,
+          "historical_revision": false
+        }
+      ]
+    }
+  ],
+  "exclusions": [],
+  "appearances": [
+    {
+      "kind": "appearance",
+      "id": "appearance-event-1",
+      "revision": 1,
+      "payload": {
+        "event_id": "event-1",
+        "id": "appearance-event-1",
+        "observation_ids": [
+          "demo-show"
+        ],
+        "person_id": "synthetic-dana-example",
+        "rationale": "Synthetic known identity; not biometric inference",
+        "reviewer": "synthetic-fixture",
+        "status": "confirmed"
+      },
+      "hash": "bc5a9c518886fd17e46819caf3ac3fbd625025aca5e89e20578ddddd47b97bcb",
+      "dependencies": [
+        {
+          "id": "event-1",
+          "kind": "event",
+          "revision": 1
+        },
+        {
+          "id": "demo-show",
+          "kind": "observation",
+          "revision": 1
+        },
+        {
+          "id": "synthetic-dana-example",
+          "kind": "person",
+          "revision": 1
+        }
+      ],
+      "created_at": "2026-09-27T22:46:40.594902+00:00",
+      "actor": "synthetic-fixture",
+      "stale": false,
+      "stale_reason": null,
+      "historical_revision": false
+    },
+    {
+      "kind": "appearance",
+      "id": "appearance-event-2",
+      "revision": 1,
+      "payload": {
+        "event_id": "event-2",
+        "id": "appearance-event-2",
+        "observation_ids": [
+          "demo-repeat"
+        ],
+        "person_id": "synthetic-dana-example",
+        "rationale": "Synthetic known identity; not biometric inference",
+        "reviewer": "synthetic-fixture",
+        "status": "confirmed"
+      },
+      "hash": "2f0e0350cfe1daaacbc6e65c430bf3091970bfa1e90d4092941f28797e4c9282",
+      "dependencies": [
+        {
+          "id": "event-2",
+          "kind": "event",
+          "revision": 1
+        },
+        {
+          "id": "demo-repeat",
+          "kind": "observation",
+          "revision": 1
+        },
+        {
+          "id": "synthetic-dana-example",
+          "kind": "person",
+          "revision": 1
+        }
+      ],
+      "created_at": "2026-09-27T22:46:40.595457+00:00",
+      "actor": "synthetic-fixture",
+      "stale": false,
+      "stale_reason": null,
+      "historical_revision": false
+    }
+  ],
+  "coverage": [
+    {
+      "kind": "coverage_run",
+      "id": "coverage-1",
+      "revision": 1,
+      "payload": {
+        "id": "coverage-1",
+        "limitation": "Three fixture assets cover two synthetic events; no real-world completeness claim.",
+        "next_cursor": null,
+        "period_end": "2025-05-02",
+        "period_start": "2025-05-01",
+        "person_id": "synthetic-dana-example",
+        "processed": 3,
+        "query": "synthetic fixture",
+        "retrieved": 3,
+        "source_id": "manual_import",
+        "state": "finished_query"
+      },
+      "hash": "857148a4328659853dd3fb7aa98d3193cf917e517e951cc7bace6ca98a43e180",
+      "dependencies": [
+        {
+          "id": "synthetic-dana-example",
+          "kind": "person",
+          "revision": 1
+        }
+      ],
+      "created_at": "2026-09-27T22:46:40.605973+00:00",
+      "actor": "synthetic-fixture",
+      "stale": false,
+      "stale_reason": null,
+      "historical_revision": false
+    }
+  ],
+  "counts": {
+    "eligible_recorded_assertion_rows": 3,
+    "distinct_aligned_assertion_occurrences": 2,
+    "distinct_propositions": 1,
+    "excluded_rows": 0
+  },
+  "coverage_statement": "Identified records only; not all appearances or all statements.",
+  "deduplication_limit": "Exact human-reviewed event coordinates only; fuzzy offset reconciliation is not implemented.",
+  "corrections": [],
+  "person_rating": null
+}

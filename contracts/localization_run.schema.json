@@ -1,0 +1,370 @@
+{
+  "$defs": {
+    "CandidateWindow": {
+      "additionalProperties": false,
+      "properties": {
+        "disposition": {
+          "enum": [
+            "candidate",
+            "audit",
+            "unprocessed",
+            "fallback"
+          ],
+          "title": "Disposition",
+          "type": "string"
+        },
+        "end_ms": {
+          "minimum": 0,
+          "title": "End Ms",
+          "type": "integer"
+        },
+        "handoff_hint": {
+          "default": false,
+          "title": "Handoff Hint",
+          "type": "boolean"
+        },
+        "id": {
+          "maxLength": 180,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "lexical_score": {
+          "minimum": 0,
+          "title": "Lexical Score",
+          "type": "number"
+        },
+        "matched_features": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Matched Features",
+          "type": "array"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "segment_indices": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Segment Indices",
+          "type": "array"
+        },
+        "semantic_signal": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Semantic Signal"
+        },
+        "start_ms": {
+          "minimum": 0,
+          "title": "Start Ms",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start_ms",
+        "end_ms",
+        "id",
+        "segment_indices",
+        "lexical_score",
+        "disposition"
+      ],
+      "title": "CandidateWindow",
+      "type": "object"
+    },
+    "Interval": {
+      "additionalProperties": false,
+      "properties": {
+        "end_ms": {
+          "minimum": 0,
+          "title": "End Ms",
+          "type": "integer"
+        },
+        "start_ms": {
+          "minimum": 0,
+          "title": "Start Ms",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start_ms",
+        "end_ms"
+      ],
+      "title": "Interval",
+      "type": "object"
+    },
+    "LocalizationConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "audit_fraction": {
+          "default": 0.1,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Audit Fraction",
+          "type": "number"
+        },
+        "audit_seed": {
+          "default": "audit-v1",
+          "title": "Audit Seed",
+          "type": "string"
+        },
+        "full_processing_fraction": {
+          "default": 0.85,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Full Processing Fraction",
+          "type": "number"
+        },
+        "lexical_threshold": {
+          "default": 1.0,
+          "minimum": 0,
+          "title": "Lexical Threshold",
+          "type": "number"
+        },
+        "max_windows": {
+          "default": 1000,
+          "maximum": 5000,
+          "minimum": 1,
+          "title": "Max Windows",
+          "type": "integer"
+        },
+        "mode": {
+          "default": "shadow",
+          "enum": [
+            "shadow",
+            "assist"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "padding_ms": {
+          "default": 10000,
+          "maximum": 180000,
+          "minimum": 0,
+          "title": "Padding Ms",
+          "type": "integer"
+        },
+        "semantic_threshold": {
+          "default": 0.35,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Semantic Threshold",
+          "type": "number"
+        },
+        "stride_ms": {
+          "default": 15000,
+          "maximum": 180000,
+          "minimum": 1000,
+          "title": "Stride Ms",
+          "type": "integer"
+        },
+        "window_ms": {
+          "default": 30000,
+          "maximum": 180000,
+          "minimum": 1000,
+          "title": "Window Ms",
+          "type": "integer"
+        }
+      },
+      "title": "LocalizationConfig",
+      "type": "object"
+    },
+    "RecordRef": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 180,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "maxLength": 180,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "revision"
+      ],
+      "title": "RecordRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "asset_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Asset Id",
+      "type": "string"
+    },
+    "audio_reduction_fraction": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Audio Reduction Fraction",
+      "type": "number"
+    },
+    "bindings": {
+      "items": {
+        "$ref": "#/$defs/RecordRef"
+      },
+      "title": "Bindings",
+      "type": "array"
+    },
+    "caption_gaps": {
+      "items": {
+        "$ref": "#/$defs/Interval"
+      },
+      "title": "Caption Gaps",
+      "type": "array"
+    },
+    "config": {
+      "$ref": "#/$defs/LocalizationConfig"
+    },
+    "coverage_recall": {
+      "default": null,
+      "title": "Coverage Recall",
+      "type": "null"
+    },
+    "decision_run_ids": {
+      "items": {
+        "maxLength": 180,
+        "minLength": 1,
+        "pattern": "^[a-zA-Z0-9_.:-]+$",
+        "type": "string"
+      },
+      "maxItems": 1000,
+      "title": "Decision Run Ids",
+      "type": "array"
+    },
+    "duration_ms": {
+      "minimum": 0,
+      "title": "Duration Ms",
+      "type": "integer"
+    },
+    "fallback_reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Fallback Reasons",
+      "type": "array"
+    },
+    "id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "identities_confirmed": {
+      "const": false,
+      "default": false,
+      "title": "Identities Confirmed",
+      "type": "boolean"
+    },
+    "probability_calibrated": {
+      "const": false,
+      "default": false,
+      "title": "Probability Calibrated",
+      "type": "boolean"
+    },
+    "profile_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "proposed_audio_ms": {
+      "minimum": 0,
+      "title": "Proposed Audio Ms",
+      "type": "integer"
+    },
+    "proposed_intervals": {
+      "items": {
+        "$ref": "#/$defs/Interval"
+      },
+      "title": "Proposed Intervals",
+      "type": "array"
+    },
+    "selected_audio_ms": {
+      "minimum": 0,
+      "title": "Selected Audio Ms",
+      "type": "integer"
+    },
+    "selected_intervals": {
+      "items": {
+        "$ref": "#/$defs/Interval"
+      },
+      "title": "Selected Intervals",
+      "type": "array"
+    },
+    "transcript_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Transcript Id",
+      "type": "string"
+    },
+    "unprocessed_intervals": {
+      "items": {
+        "$ref": "#/$defs/Interval"
+      },
+      "title": "Unprocessed Intervals",
+      "type": "array"
+    },
+    "windows": {
+      "items": {
+        "$ref": "#/$defs/CandidateWindow"
+      },
+      "maxItems": 5000,
+      "title": "Windows",
+      "type": "array"
+    }
+  },
+  "required": [
+    "profile_id",
+    "transcript_id",
+    "asset_id",
+    "config",
+    "duration_ms",
+    "windows",
+    "proposed_intervals",
+    "selected_intervals",
+    "unprocessed_intervals",
+    "caption_gaps",
+    "bindings",
+    "proposed_audio_ms",
+    "selected_audio_ms",
+    "audio_reduction_fraction"
+  ],
+  "title": "LocalizationRun",
+  "type": "object"
+}

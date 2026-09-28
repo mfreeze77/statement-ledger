@@ -1,0 +1,92 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "limitation": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "title": "Limitation",
+      "type": "string"
+    },
+    "next_cursor": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Next Cursor"
+    },
+    "period_end": {
+      "format": "date",
+      "title": "Period End",
+      "type": "string"
+    },
+    "period_start": {
+      "format": "date",
+      "title": "Period Start",
+      "type": "string"
+    },
+    "person_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Person Id",
+      "type": "string"
+    },
+    "processed": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Processed",
+      "type": "integer"
+    },
+    "query": {
+      "title": "Query",
+      "type": "string"
+    },
+    "retrieved": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Retrieved",
+      "type": "integer"
+    },
+    "source_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Source Id",
+      "type": "string"
+    },
+    "state": {
+      "default": "planned",
+      "enum": [
+        "planned",
+        "partial",
+        "finished_query",
+        "blocked",
+        "failed"
+      ],
+      "title": "State",
+      "type": "string"
+    }
+  },
+  "required": [
+    "person_id",
+    "source_id",
+    "query",
+    "period_start",
+    "period_end",
+    "limitation"
+  ],
+  "title": "CoverageRun",
+  "type": "object"
+}

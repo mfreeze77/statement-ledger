@@ -1,0 +1,258 @@
+{
+  "$defs": {
+    "PhraseFeature": {
+      "additionalProperties": false,
+      "properties": {
+        "background_events": {
+          "minimum": 0,
+          "title": "Background Events",
+          "type": "integer"
+        },
+        "category": {
+          "enum": [
+            "opening",
+            "closing",
+            "phrase"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "phrase": {
+          "maxLength": 100000,
+          "minLength": 1,
+          "title": "Phrase",
+          "type": "string"
+        },
+        "target_events": {
+          "minimum": 1,
+          "title": "Target Events",
+          "type": "integer"
+        },
+        "weight": {
+          "exclusiveMinimum": 0,
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "category",
+        "phrase",
+        "target_events",
+        "background_events",
+        "weight"
+      ],
+      "title": "PhraseFeature",
+      "type": "object"
+    },
+    "ProfileConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "max_features": {
+          "default": 100,
+          "maximum": 500,
+          "minimum": 1,
+          "title": "Max Features",
+          "type": "integer"
+        },
+        "max_ngram": {
+          "default": 4,
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Max Ngram",
+          "type": "integer"
+        },
+        "min_background_events": {
+          "default": 2,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Min Background Events",
+          "type": "integer"
+        },
+        "min_events": {
+          "default": 2,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Min Events",
+          "type": "integer"
+        },
+        "min_feature_events": {
+          "default": 2,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Min Feature Events",
+          "type": "integer"
+        },
+        "min_ngram": {
+          "default": 2,
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Min Ngram",
+          "type": "integer"
+        }
+      },
+      "title": "ProfileConfig",
+      "type": "object"
+    },
+    "RecordRef": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 180,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "maxLength": 180,
+          "minLength": 1,
+          "pattern": "^[a-zA-Z0-9_.:-]+$",
+          "title": "Kind",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "revision"
+      ],
+      "title": "RecordRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "algorithm": {
+      "const": "event-log-odds-v1",
+      "default": "event-log-odds-v1",
+      "title": "Algorithm",
+      "type": "string"
+    },
+    "background_event_ids": {
+      "items": {
+        "maxLength": 180,
+        "minLength": 1,
+        "pattern": "^[a-zA-Z0-9_.:-]+$",
+        "type": "string"
+      },
+      "title": "Background Event Ids",
+      "type": "array"
+    },
+    "background_ids": {
+      "items": {
+        "maxLength": 180,
+        "minLength": 1,
+        "pattern": "^[a-zA-Z0-9_.:-]+$",
+        "type": "string"
+      },
+      "maxItems": 10000,
+      "title": "Background Ids",
+      "type": "array"
+    },
+    "bindings": {
+      "items": {
+        "$ref": "#/$defs/RecordRef"
+      },
+      "title": "Bindings",
+      "type": "array"
+    },
+    "calibration": {
+      "const": "uncalibrated",
+      "default": "uncalibrated",
+      "title": "Calibration",
+      "type": "string"
+    },
+    "config": {
+      "$ref": "#/$defs/ProfileConfig"
+    },
+    "duplicate_example_ids": {
+      "items": {
+        "maxLength": 180,
+        "minLength": 1,
+        "pattern": "^[a-zA-Z0-9_.:-]+$",
+        "type": "string"
+      },
+      "title": "Duplicate Example Ids",
+      "type": "array"
+    },
+    "example_ids": {
+      "items": {
+        "maxLength": 180,
+        "minLength": 1,
+        "pattern": "^[a-zA-Z0-9_.:-]+$",
+        "type": "string"
+      },
+      "maxItems": 10000,
+      "title": "Example Ids",
+      "type": "array"
+    },
+    "features": {
+      "items": {
+        "$ref": "#/$defs/PhraseFeature"
+      },
+      "maxItems": 500,
+      "title": "Features",
+      "type": "array"
+    },
+    "id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "limitations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "person_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Person Id",
+      "type": "string"
+    },
+    "readiness": {
+      "default": "cold_start",
+      "enum": [
+        "cold_start",
+        "research_ready"
+      ],
+      "title": "Readiness",
+      "type": "string"
+    },
+    "retained_example_ids": {
+      "items": {
+        "maxLength": 180,
+        "minLength": 1,
+        "pattern": "^[a-zA-Z0-9_.:-]+$",
+        "type": "string"
+      },
+      "title": "Retained Example Ids",
+      "type": "array"
+    },
+    "target_event_ids": {
+      "items": {
+        "maxLength": 180,
+        "minLength": 1,
+        "pattern": "^[a-zA-Z0-9_.:-]+$",
+        "type": "string"
+      },
+      "title": "Target Event Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "person_id"
+  ],
+  "title": "SpeakerProfile",
+  "type": "object"
+}

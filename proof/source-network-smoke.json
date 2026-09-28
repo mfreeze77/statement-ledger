@@ -1,0 +1,10 @@
+{
+  "gdelt_sample": {
+    "ok": false,
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  "aapb_metadata": {
+    "ok": false,
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  }
+}

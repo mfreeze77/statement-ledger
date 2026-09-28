@@ -1,0 +1,22 @@
+{
+  "name": "Statement Ledger",
+  "version": "0.2.0",
+  "release_date": "2026-09-27",
+  "delivery": "Standalone research implementation, shared claim library, transcript-first localization and expanded specification",
+  "specification_chapters": 29,
+  "specification_words": 21865,
+  "source_registry_entries": 34,
+  "source_worksheets": 34,
+  "record_schemas": 20,
+  "engineering_tickets": 85,
+  "architecture_decisions": 6,
+  "tests_passed": 227,
+  "statement_coverage_percent": 90.68,
+  "remote_repository_created": false,
+  "live_source_connections_verified": 0,
+  "synthetic_demo_only": true,
+  "specification_version": "1.1",
+  "baseline_commit": "c72ea146c53d03902420dc4b0e27ab1b0f4ebffd",
+  "live_jev_verified": false,
+  "real_speech_inference_executed": false
+}

@@ -1,0 +1,10 @@
+{
+  "executed": false,
+  "browser_launched": true,
+  "browser": "system Chromium via Playwright",
+  "failure": "Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR for local test server",
+  "static_routes_and_api_tested": true,
+  "javascript_syntax_checked": true,
+  "visual_validation_passed": false,
+  "note": "No attempt was made to bypass browser administrator restrictions. Re-run scripts/verify-ui.py in an authorized local environment."
+}

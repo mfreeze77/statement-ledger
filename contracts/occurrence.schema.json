@@ -1,0 +1,69 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "assertion": {
+      "enum": [
+        "asserted",
+        "quoted",
+        "rejected",
+        "hypothetical",
+        "question",
+        "unclear"
+      ],
+      "title": "Assertion",
+      "type": "string"
+    },
+    "extraction_rationale": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Extraction Rationale"
+    },
+    "extraction_reviewed_by": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Extraction Reviewed By"
+    },
+    "id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "proposition_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Proposition Id",
+      "type": "string"
+    },
+    "utterance_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Utterance Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "utterance_id",
+    "proposition_id",
+    "assertion"
+  ],
+  "title": "Occurrence",
+  "type": "object"
+}

@@ -1,0 +1,30 @@
+........................................................................ [ 57%]
+......................................................                   [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.13.5-final-0 ________________
+
+Name                                          Stmts   Miss  Cover
+-----------------------------------------------------------------
+src/statement_ledger/__init__.py                  1      0   100%
+src/statement_ledger/api.py                     106      4    96%
+src/statement_ledger/cli.py                     125     48    62%
+src/statement_ledger/connectors/__init__.py       0      0   100%
+src/statement_ledger/connectors/http.py          90     11    88%
+src/statement_ledger/connectors/parsers.py      133      9    93%
+src/statement_ledger/connectors/registry.py       9      1    89%
+src/statement_ledger/demo.py                     33      5    85%
+src/statement_ledger/discovery.py                 9      1    89%
+src/statement_ledger/ingest.py                   64      9    86%
+src/statement_ledger/jobs.py                     38      1    97%
+src/statement_ledger/media.py                    29      6    79%
+src/statement_ledger/models.py                  199      4    98%
+src/statement_ledger/policy.py                   15      1    93%
+src/statement_ledger/service.py                 242     41    83%
+src/statement_ledger/speech.py                   41     14    66%
+src/statement_ledger/store.py                   132      9    93%
+src/statement_ledger/transcripts.py              39      1    97%
+src/statement_ledger/util.py                     19      2    89%
+-----------------------------------------------------------------
+TOTAL                                          1324    167    87%
+Coverage JSON written to file proof/coverage.json
+126 passed in 3.39s

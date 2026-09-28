@@ -1,0 +1,10 @@
+WARNING: The directory '/home/oai/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Processing /mnt/data/upgrade-work/statement-ledger
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: statement-ledger
+  Building wheel for statement-ledger (pyproject.toml): started
+  Building wheel for statement-ledger (pyproject.toml): finished with status 'done'
+  Created wheel for statement-ledger: filename=statement_ledger-0.2.0-py3-none-any.whl size=77315 sha256=29c7d60272a0436f2e6f768db4e71e7625206d0b2d0b26db3ab6177fa5ffa21b
+  Stored in directory: /tmp/pip-ephem-wheel-cache-a2od4cot/wheels/53/01/0a/8e756d1fe5a0891ffbd842bd9807c5b4349409b68c021473f5
+Successfully built statement-ledger

@@ -1,0 +1,49 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "max_features": {
+      "default": 100,
+      "maximum": 500,
+      "minimum": 1,
+      "title": "Max Features",
+      "type": "integer"
+    },
+    "max_ngram": {
+      "default": 4,
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Max Ngram",
+      "type": "integer"
+    },
+    "min_background_events": {
+      "default": 2,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Min Background Events",
+      "type": "integer"
+    },
+    "min_events": {
+      "default": 2,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Min Events",
+      "type": "integer"
+    },
+    "min_feature_events": {
+      "default": 2,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Min Feature Events",
+      "type": "integer"
+    },
+    "min_ngram": {
+      "default": 2,
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Min Ngram",
+      "type": "integer"
+    }
+  },
+  "title": "ProfileConfig",
+  "type": "object"
+}

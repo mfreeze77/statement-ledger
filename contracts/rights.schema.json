@@ -1,0 +1,81 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "allowed": {
+      "items": {
+        "enum": [
+          "discover",
+          "store_text",
+          "store_media",
+          "process_audio",
+          "derive_clip",
+          "publish_excerpt",
+          "publish_media",
+          "send_to_provider",
+          "index_external",
+          "learn_profile",
+          "process_biometrics"
+        ],
+        "type": "string"
+      },
+      "title": "Allowed",
+      "type": "array"
+    },
+    "basis": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "title": "Basis",
+      "type": "string"
+    },
+    "evidence_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Evidence Url"
+    },
+    "expires_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expires At"
+    },
+    "id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "reviewed_by": {
+      "title": "Reviewed By",
+      "type": "string"
+    },
+    "source_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Source Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_id",
+    "basis",
+    "reviewed_by"
+  ],
+  "title": "RightsGrant",
+  "type": "object"
+}

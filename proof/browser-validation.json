@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "status": "blocked_by_environment",
+  "attempted": "Playwright with installed system Chromium against the local reference server",
+  "error": "Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR",
+  "visual_validation_performed": false,
+  "note": "The Playwright-managed browser was absent. System Chromium launched but the environment blocked local navigation. No browser screenshot or visual pass is claimed."
+}

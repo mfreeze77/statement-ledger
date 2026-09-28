@@ -1,0 +1,130 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "appearance_lead",
+        "quotation_lead",
+        "external_review",
+        "media_review",
+        "transcript_lead",
+        "frequency_signal",
+        "metadata",
+        "primary_document"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "links": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 10000,
+      "title": "Links",
+      "type": "array"
+    },
+    "native_id": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "title": "Native Id",
+      "type": "string"
+    },
+    "parser_version": {
+      "default": "1",
+      "title": "Parser Version",
+      "type": "string"
+    },
+    "published_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Published At"
+    },
+    "raw_payload": {
+      "additionalProperties": true,
+      "title": "Raw Payload",
+      "type": "object"
+    },
+    "raw_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Raw Sha256",
+      "type": "string"
+    },
+    "reported_speaker": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reported Speaker"
+    },
+    "retrieved_at": {
+      "format": "date-time",
+      "title": "Retrieved At",
+      "type": "string"
+    },
+    "rights_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Rights Id",
+      "type": "string"
+    },
+    "source_id": {
+      "maxLength": 180,
+      "minLength": 1,
+      "pattern": "^[a-zA-Z0-9_.:-]+$",
+      "title": "Source Id",
+      "type": "string"
+    },
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Text"
+    },
+    "title": {
+      "default": "",
+      "title": "Title",
+      "type": "string"
+    },
+    "url": {
+      "title": "Url",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_id",
+    "native_id",
+    "rights_id",
+    "kind",
+    "url",
+    "raw_payload",
+    "raw_sha256"
+  ],
+  "title": "Observation",
+  "type": "object"
+}

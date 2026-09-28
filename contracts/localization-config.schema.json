@@ -1,0 +1,76 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "audit_fraction": {
+      "default": 0.1,
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Audit Fraction",
+      "type": "number"
+    },
+    "audit_seed": {
+      "default": "audit-v1",
+      "title": "Audit Seed",
+      "type": "string"
+    },
+    "full_processing_fraction": {
+      "default": 0.85,
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Full Processing Fraction",
+      "type": "number"
+    },
+    "lexical_threshold": {
+      "default": 1.0,
+      "minimum": 0,
+      "title": "Lexical Threshold",
+      "type": "number"
+    },
+    "max_windows": {
+      "default": 1000,
+      "maximum": 5000,
+      "minimum": 1,
+      "title": "Max Windows",
+      "type": "integer"
+    },
+    "mode": {
+      "default": "shadow",
+      "enum": [
+        "shadow",
+        "assist"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "padding_ms": {
+      "default": 10000,
+      "maximum": 180000,
+      "minimum": 0,
+      "title": "Padding Ms",
+      "type": "integer"
+    },
+    "semantic_threshold": {
+      "default": 0.35,
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Semantic Threshold",
+      "type": "number"
+    },
+    "stride_ms": {
+      "default": 15000,
+      "maximum": 180000,
+      "minimum": 1000,
+      "title": "Stride Ms",
+      "type": "integer"
+    },
+    "window_ms": {
+      "default": 30000,
+      "maximum": 180000,
+      "minimum": 1000,
+      "title": "Window Ms",
+      "type": "integer"
+    }
+  },
+  "title": "LocalizationConfig",
+  "type": "object"
+}
