@@ -5,28 +5,67 @@ on:
 permissions:
   contents: read
 jobs:
-  baseline:
+  provision:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      - name: Export exact baseline and validation tools
+          python-version: '3.13'
+      - name: Resolve lockfiles and validation tooling
+        shell: bash
         run: |
-          mkdir -p /tmp/phase0-baseline/wheels
-          git archive --format=zip -o /tmp/phase0-baseline/source.zip HEAD
-          git bundle create /tmp/phase0-baseline/source.bundle --all
-          git rev-parse HEAD > /tmp/phase0-baseline/commit.txt
-          python -m pip download --only-binary=:all: --dest /tmp/phase0-baseline/wheels ruff==0.14.14 mypy==1.19.1 pre-commit==4.5.1 uv==0.10.0 pydantic-settings==2.14.1
-          curl -fsSL https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz -o /tmp/phase0-baseline/gitleaks.tar.gz
-          curl -fsSL https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_checksums.txt -o /tmp/phase0-baseline/gitleaks_checksums.txt
-          cd /tmp/phase0-baseline
-          grep 'gitleaks_8.30.1_linux_x64.tar.gz' gitleaks_checksums.txt | sed 's/gitleaks_8.30.1_linux_x64.tar.gz/gitleaks.tar.gz/' | sha256sum --check
+          set -euo pipefail
+          mkdir -p /tmp/foundation/wheels /tmp/project/src/statement_ledger /tmp/project/environments/gpu
+          python -m pip install uv==0.10.0
+          python -m pip download --only-binary=:all: --dest /tmp/foundation/wheels mypy==1.19.1 pre-commit==4.5.1
+          cat > /tmp/project/pyproject.toml <<'EOF'
+          [build-system]
+          requires = ["setuptools==80.9.0"]
+          build-backend = "setuptools.build_meta"
+          [project]
+          name = "statement-ledger"
+          version = "0.3.0"
+          description = "Source-bound public statement research ledger with reviewed identity and evidence provenance"
+          requires-python = ">=3.11,<3.14"
+          dependencies = ["fastapi==0.128.2", "pydantic==2.13.4", "httpx==0.28.1", "uvicorn==0.48.0", "python-dotenv==1.2.2"]
+          [project.optional-dependencies]
+          test = ["pytest==9.0.2", "pytest-cov==7.0.0"]
+          [dependency-groups]
+          dev = ["pytest==9.0.2", "pytest-cov==7.0.0", "ruff==0.14.14", "mypy==1.19.1", "pre-commit==4.5.1"]
+          [project.scripts]
+          statement-ledger = "statement_ledger.application.runtime:main"
+          [tool.setuptools.packages.find]
+          where = ["src"]
+          EOF
+          touch /tmp/project/src/statement_ledger/__init__.py
+          cat > /tmp/project/environments/gpu/pyproject.toml <<'EOF'
+          [project]
+          name = "statement-ledger-gpu-runtime"
+          version = "0.3.0"
+          requires-python = ">=3.11,<3.12"
+          dependencies = ["statement-ledger", "torch==2.8.0", "torchaudio==2.8.0", "faster-whisper==1.2.1", "pyannote.audio==4.0.3", "speechbrain==1.0.3"]
+          [tool.uv]
+          package = false
+          [tool.uv.sources]
+          statement-ledger = {path = "../..", editable = true}
+          torch = {index = "pytorch-cu128"}
+          torchaudio = {index = "pytorch-cu128"}
+          [[tool.uv.index]]
+          name = "pytorch-cu128"
+          url = "https://download.pytorch.org/whl/cu128"
+          explicit = true
+          EOF
+          uv lock --project /tmp/project
+          uv lock --project /tmp/project/environments/gpu
+          cp /tmp/project/uv.lock /tmp/foundation/uv.lock
+          cp /tmp/project/environments/gpu/uv.lock /tmp/foundation/gpu-uv.lock
+          for image in python:3.13-slim-bookworm python:3.11-slim-bookworm ghcr.io/astral-sh/uv:0.10.0; do
+            docker buildx imagetools inspect "$image" >> /tmp/foundation/image-manifests.txt
+          done
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: phase0-baseline
-          path: /tmp/phase0-baseline
+          name: phase0-resolved-tools
+          path: /tmp/foundation
           retention-days: 3
