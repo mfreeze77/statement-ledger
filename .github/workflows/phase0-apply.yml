@@ -59,9 +59,9 @@ jobs:
               path.unlink(missing_ok=True)
           shutil.copyfile('/tmp/phase0-resolved/uv.lock', 'uv.lock')
           shutil.copyfile('/tmp/phase0-resolved/gpu-uv.lock','environments/gpu/uv.lock')
+          shutil.copyfile('.github/workflows/ci.yml','/tmp/phase0-final-ci.yml')
           shutil.rmtree('.phase0-transfer')
-          Path('.github/workflows/phase0-toolchain.yml').unlink(missing_ok=True)
-          Path('.github/workflows/phase0-apply.yml').unlink()
+          subprocess.run(['git','restore','--source=HEAD','--worktree','.github/workflows'], check=True)
           PY
       - name: Regenerate and check final source tree
         run: |
@@ -72,13 +72,17 @@ jobs:
           git add -A
           uv run --locked python scripts/check.py check | tee /tmp/phase0-validation.txt
           uv build
-          git diff --cached --exit-code -- LICENSE
-      - name: Publish implementation without rewriting history
+          git diff --cached --exit-code -- LICENSE .github/workflows
+      - name: Commit and retain implementation before publication
         run: |
           git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Implement Phase 0 foundation: modular core, locked environments, migrations and fenced workers'
-          git push origin HEAD:assistant/phase0-foundation
           git bundle create /tmp/statement-ledger-phase0.bundle --all
           git rev-parse HEAD > /tmp/phase0-final-sha.txt
+          git ls-tree -r HEAD > /tmp/phase0-final-tree.txt
+          git archive HEAD -o /tmp/statement-ledger-phase0.zip
+      - name: Publish source without rewriting history or modifying workflows
+        continue-on-error: true
+        run: git push origin HEAD:assistant/phase0-foundation
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -87,4 +91,7 @@ jobs:
             /tmp/phase0-validation.txt
             /tmp/statement-ledger-phase0.bundle
             /tmp/phase0-final-sha.txt
+            /tmp/phase0-final-tree.txt
+            /tmp/phase0-final-ci.yml
+            /tmp/statement-ledger-phase0.zip
           retention-days: 3
