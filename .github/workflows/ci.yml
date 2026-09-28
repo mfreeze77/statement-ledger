@@ -41,6 +41,7 @@ jobs:
           print(f'MATRIX_INTERPRETER_VERIFIED: {actual}; {sys.executable}')
           PYTHON
       - run: uv run --locked python scripts/check.py check 2>&1 | tee /tmp/foundation-checks.txt
+      - run: grep -Fx FOUNDATION_CHECK_COMPLETE /tmp/foundation-checks.txt
       - run: uv build
       - name: Archive the tested tracked source
         if: matrix.python == '3.13'
@@ -73,6 +74,7 @@ jobs:
       - run: python scripts/dev.py doctor
       - run: python scripts/container-smoke.py
       - run: python scripts/dev.py proof 2>&1 | tee /tmp/container-proof.txt
+      - run: grep -Fx FOUNDATION_PROOF_COMPLETE /tmp/container-proof.txt
       - if: always()
         run: python scripts/dev.py down
       - uses: actions/upload-artifact@v4

@@ -67,3 +67,12 @@ def test_runner_reports_completion_only_after_all_gates(monkeypatch, capsys):
     assert main() == 0
     assert calls[-1][-1] == "scripts/foundation-proof.py"
     assert "FOUNDATION_CHECK_COMPLETE" in capsys.readouterr().out
+
+
+def test_workflow_matrix_overrides_local_python_pin():
+    workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    assert "UV_PYTHON: ${{ matrix.python }}" in workflow
+    assert "UV_PYTHON_DOWNLOADS: never" in workflow
+    assert "expected = os.environ['UV_PYTHON']" in workflow
+    assert "assert actual == expected" in workflow
+    assert "MATRIX_INTERPRETER_VERIFIED" in workflow
