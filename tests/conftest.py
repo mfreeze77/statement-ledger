@@ -20,4 +20,5 @@ def pytest_collection_modifyitems(config,items):
     if os.getenv("SL_RUN_LIVE")=="1":return
     skip=pytest.mark.skip(reason="live test; set SL_RUN_LIVE=1 locally")
     for item in items:
-        if "live" in item.keywords:item.add_marker(skip)
+        # Match the marker itself; item.keywords also holds parametrize ids and node names.
+        if item.get_closest_marker("live"):item.add_marker(skip)
