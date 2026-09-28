@@ -1,0 +1,31 @@
+name: phase0-toolchain
+on:
+  push:
+    branches: [assistant/phase0-foundation]
+    paths: [.github/workflows/phase0-toolchain.yml]
+permissions:
+  contents: read
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Collect reproducible development tooling
+        run: |
+          mkdir -p /tmp/phase0-toolchain/wheels
+          python -m pip download --only-binary=:all: --dest /tmp/phase0-toolchain/wheels ruff==0.14.10 mypy==1.19.1 pre-commit==4.5.1 pytest-cov==7.0.0 uv==0.9.21 setuptools==80.9.0
+          git bundle create /tmp/phase0-toolchain/baseline.bundle --all
+          git rev-parse HEAD > /tmp/phase0-toolchain/baseline-sha.txt
+          python -m pip index versions pyannote.audio > /tmp/phase0-toolchain/pyannote-versions.txt
+          python -m pip index versions faster-whisper > /tmp/phase0-toolchain/faster-whisper-versions.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase0-toolchain
+          path: /tmp/phase0-toolchain
+          retention-days: 1
