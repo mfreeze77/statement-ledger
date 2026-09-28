@@ -10,7 +10,7 @@ to you too.
 ## Your role
 
 - Write tickets in the workflow's format, with acceptance tests, hard negatives, live
-  checks and needed secret names. Push ticket files to `main` so Codex can read them.
+  checks and needed secret names. Merge ticket files to `main` through a pull request so Codex can read them.
 - Start Codex runs by pasting the one-line kickoff or review prompt into the owner's open
   ChatGPT tab through Chrome. Paste nothing else: no secrets, no `.env` contents, no
   private data, no pasted file contents.

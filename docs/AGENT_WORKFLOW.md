@@ -14,8 +14,8 @@ agents also follow the engineering instructions at the top of AGENTS.md.
 
 ## The loop
 
-1. **Ticket.** Claude writes `tickets/SL-xxx-*.md` (format below), commits it and pushes it
-   to `main` so the cloud agent can read it.
+1. **Ticket.** Claude writes `tickets/SL-xxx-*.md` (format below) and merges it to `main`
+   through a pull request so the cloud agent can read it.
 2. **Kickoff.** Claude pastes one line into the owner's open ChatGPT tab:
    `Implement everything in tickets/SL-xxx-<slug>.md in mfreeze77/statement-ledger. Follow AGENTS.md. Open a PR against main from branch codex/SL-xxx.`
 3. **Build.** Codex works in its sandbox and opens a pull request.
@@ -108,8 +108,8 @@ Merge only when all of these hold:
 9. High-risk areas touched by the PR (migrations, worker result commits, secrets and
    auth) got a code review beyond CI, whatever the CI result.
 
-Merges use squash. Nobody pushes directly to `main` except Claude committing tickets and
-workflow documents.
+Merges use squash. Every change to `main`, including tickets and workflow documents, goes
+through a pull request with the required CI checks; nobody pushes directly to `main`.
 
 ## Escalate to the owner
 
